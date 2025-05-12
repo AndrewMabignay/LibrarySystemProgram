@@ -24,3 +24,10 @@ CREATE TABLE student(
 
 INSERT INTO student(StudentID, StudentName, Course, Major, YearLevel, Status) VALUES 
 ('2022-10030', 'Papi River', 'BSCS', 'Computer Science', '3', 'Active');
+
+SELECT * FROM student WHERE StudentID = '2022-10029';
+
+SELECT * FROM user WHERE Username = '2022-10029';
+
+UPDATE student SET Name = '', Course = '', Major = '', YearLevel = '', Status = '' WHERE StudentID = ''
+UPDATE user SET Password = '', Status = '' WHERE Username = '';

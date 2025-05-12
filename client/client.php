@@ -1,5 +1,15 @@
 <?php
 
+session_start();
+
+if (!isset($_SESSION['id'])):
+    header("Location: ../auth/login.php");
+    exit;
+elseif ($_SESSION['role'] !== "Student"):
+    header("Location: ../admin/admin.php?page=dashboard");
+    exit;
+endif;
+
 // echo 'Hello World!';
 
 if (isset($_POST['logout'])) {

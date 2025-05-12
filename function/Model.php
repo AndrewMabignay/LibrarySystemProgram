@@ -31,9 +31,9 @@ class Model {
             echo "Input Password: " . $password . "<br>";
             echo "Stored Hash: " . $users['Password'] . "<br>";
 
-            // if (password_verify($password, $users['Password'])) {
+            if (password_verify($password, $users['Password'])) {
 
-            if ($password === $users['Password']) {
+            // if ($password === $users['Password']) {
                 session_start();
                 $_SESSION['id'] = $users['ID'];
                 $_SESSION['username'] = $users['Username'];
@@ -71,15 +71,143 @@ class Model {
     public function addStudent($studentNumber, $studentName, $course, $major, $yearLevel, $status, $password, $verifyPassword) {
         global $conn;
 
-        if (empty($studentNumber) || empty($studentName) || empty($course) || empty($major) || empty($yearLevel) || empty($status) || empty($password)) {
-            return 'Fill up all fields';
+        // CHECK CONDITION
+        if (empty($studentNumber) || empty($studentName) || empty($course) || empty($major) || empty($yearLevel) || empty($status) || empty($password) || empty($verifyPassword)) {
+            return 'Fill up all fields.';
         }
 
+        if ($password !== $verifyPassword) {
+            return 'Passwords do not match. Please try again.';
+        }
+
+        $this->query = "SELECT * FROM student WHERE StudentID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $studentNumber);
+        $statement->execute();
+        $verify = $statement->get_result();
+
+        if ($verify->num_rows > 0) {
+            return 'Duplicate Student # Invalid.';
+        }
+
+        // ADD STUDENT
         $this->query = "INSERT INTO student(StudentID, StudentName, Course, Major, YearLevel, Status) VALUES (?, ?, ?, ?, ?, ?)";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('ssssss', $studentNumber, $studentName, $course, $major, $yearLevel, $status);
+        $statement->execute();
+
+        // ADD USER
+        $this->query = "INSERT INTO user(Username, Password, Role, Status) VALUES (?, ?, 'Student', ?)";
+        $statement = $conn->prepare($this->query);
+        $hashedPassword = password_hash($studentNumber, PASSWORD_DEFAULT);
+        $statement->bind_param('sss', $studentNumber, $hashedPassword, $status);
 
         return $statement->execute() ? 'Successfully Inserted' : 'Not successfully Inserted';
+    }
+
+    public function showStudent() {
+        global $conn;
+
+        $this->query = "SELECT * FROM student";
+        $statement = mysqli_prepare($conn, $this->query);
+        mysqli_stmt_execute($statement);
+        $result = mysqli_stmt_get_result($statement);
+        $rows = [];
+
+        if ($result && mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+    
+
+    // public function retrieveStudent($studentID) {
+    //     global $conn;
+
+    //     $stmt = $conn->prepare("SELECT * FROM user WHERE Username = ?");
+    //     $stmt->bind_param("s", $studentID);
+    //     $stmt->execute();
+        
+    //     $result = $stmt->get_result();
+    //     $rows = $result->fetch_all(MYSQLI_ASSOC);
+        
+    //     $stmt->close();
+        
+    //     return $rows;
+    // }
+
+    // public function retrieveStudent($studentID) {
+    //     global $conn;
+
+    //     $this->query = "SELECT * FROM user WHERE Username = '$studentID' LIMIT 1";
+    //     $result = mysqli_query($conn, $this->query);
+
+    //     if ($result && mysqli_num_rows($result) > 0) {
+    //         return mysqli_fetch_assoc($result); // returns single row
+    //     }
+
+    //     return [];
+    // }
+
+
+
+    // MAINTENANCE
+    public function editStudent($currentStudentNumber, $studentNumber, $studentName, $course, $major, $yearLevel, $status, $password, $verifyPassword) {
+        global $conn;
+
+        $this->query = "SELECT * FROM student WHERE StudentID = ? AND StudentID != ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('ss', $currentStudentNumber, $studentNumber);
+        $statement->execute();
+        $verify = $statement->get_result();
+
+        if ($verify->num_rows > 0) {
+            return 'Duplicate Student # Invalid.';
+        }
+
+        // UPDATE STUDENT
+        $this->query = "UPDATE student SET StudentName = ?, Course = ?, Major = ?, YearLevel = ?, Status = ? WHERE StudentID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('ssssss', $studentName, $course, $major, $yearLevel, $status, $studentNumber);
+
+
+        // UPDATE USER
+        if (empty($password) && empty($verifyPassword)) {
+            return $statement->execute() ? 'Successfully Updated' : 'Not successfully Updated';
+        }
+
+        if (empty($password) && !empty($verifyPassword)) {
+            return 'Please fill in the password field.';
+        }
+
+        if (!empty($password) && empty($verifyPassword)) {
+            return 'Please confirm your password.';
+        }
+
+        $this->query = "UPDATE user SET Password = ?, Status = ? WHERE Username = ?";
+        $statement = $conn->prepare($this->query);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        $statement->bind_param('sss', $hashedPassword, $status, $studentNumber);
+        return $statement->execute() ? 'Successfully Password Updated' : 'Not successfully password Updated';  
+    }
+
+    public function studentID($studentID) {
+        global $conn;
+        $this->query = "SELECT * FROM student WHERE StudentID = '$studentID'";
+        $retrieve = \mysqli_query($conn, $this->query);
+
+        $rows = [];
+
+        if ($retrieve && mysqli_num_rows($retrieve) > 0) {
+            while ($row = mysqli_fetch_assoc($retrieve)) {
+                $rows[] = $row;
+            }
+        } 
+
+        return $rows;
     }
 
     // 2. ADMIN | STUDENT LIST (ADD STUDENT) && ADMIN LIST (ADD ADMIN) 

@@ -196,6 +196,7 @@ class Model {
 
     public function studentID($studentID) {
         global $conn;
+
         $this->query = "SELECT * FROM student WHERE StudentID = '$studentID'";
         $retrieve = \mysqli_query($conn, $this->query);
 
@@ -210,8 +211,58 @@ class Model {
         return $rows;
     }
 
-    // 2. ADMIN | STUDENT LIST (ADD STUDENT) && ADMIN LIST (ADD ADMIN) 
-    // public function addUser() {
+    // 3. ADD BOOK
+    public function addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
+        global $conn;
 
-    // }
+        $this->query = "SELECT * FROM books WHERE BookID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $bookID);
+        $statement->execute();
+        $verify = $statement->get_result();
+
+        if ($verify->num_rows > 0) {
+            return 'Duplicate Book ID is Invalid.';
+        }
+
+        $this->query = "INSERT INTO books(BookID, Title, Author, ISBN, Category, Copies) VALUES (?, ?, ?, ?, ?, ?)";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('sssssi', $bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
+        
+        return $statement->execute() ? 'Successfully Inserted' : 'Not successfully Inserted';        
+    }   
+
+    public function showBook() {
+        global $conn;
+
+        $this->query = "SELECT * FROM books";
+        $retrieve = \mysqli_query($conn, $this->query);
+
+        $rows = [];
+
+        if ($retrieve && mysqli_num_rows($retrieve) > 0) {
+            while ($row = mysqli_fetch_assoc($retrieve)) {
+                $rows[] = $row;
+            }
+        } 
+
+        return $rows;
+    }
+
+    public function searchBook($input) {
+        global $conn;
+
+        $this->query = "SELECT * FROM books WHERE BookID LIKE '%$input%' OR Title LIKE '%$input%' OR Author LIKE '%$input%' OR ISBN LIKE '%$input%' OR Category LIKE '%$input%' OR Copies LIKE '%$input%'";
+        $retrieve = \mysqli_query($conn, $this->query);
+
+        $rows = [];
+
+        if ($retrieve && mysqli_num_rows($retrieve) > 0) {
+            while ($row = mysqli_fetch_assoc($retrieve)) {
+                $rows[] = $row;
+            }
+        } 
+
+        return $rows;
+    }
 }

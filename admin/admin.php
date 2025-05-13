@@ -18,11 +18,15 @@ if (isset($_POST['logout'])) {
 
 $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 
-echo $page;
+// echo $page;
 
 if (isset($_POST['book']) || $page == 'book') {
     ob_start();
     include('navigation/book.php');
+    $content = ob_get_clean();
+} else if (isset($_POST['dashboard']) || $page == 'dashboard') {
+    ob_start();
+    include('navigation/dashboard.php');
     $content = ob_get_clean();
 } else if (isset($_POST['result']) || $page == 'inventoryStatus') {
     ob_start();
@@ -43,31 +47,45 @@ if (isset($_POST['book']) || $page == 'book') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- CSS FILES -->
+    <link rel="stylesheet" href="../public/css/general.css">
+    <link rel="stylesheet" href="../public/css/admin/admin.css">
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
     <!-- SIDEBAR NAVIGATION -->
     <nav>
-        <form action="admin.php" method="GET">
-            <button type="submit" name="page" value="dashboard">
-                <i class="fas fa-columns"></i> Dashboard
-            </button>
-            <button type="submit" name="page" value="book">
-                <i class="fas fa-circle-notch"></i> Book
-            </button>
-            <button type="submit" name="page" value="inventoryStatus">
-                <i class="fas fa-chart-line"></i> InventoryStatus
-            </button>
-            <button type="submit" name="page" value="studentList">
-                <i class="fas fa-user"></i> studentList
-            </button>
-        </form>
 
-        <form action="admin.php" method="POST"> 
-            <hr>
-            <button type="submit" name="logout">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </form>
+        <!-- BUTTON FORMS -->
+        <div class="form-buttons-container">
+            <form action="admin.php" method="GET">
+                <button type="submit" name="page" value="dashboard">
+                    <i class="fas fa-columns"></i> Dashboard
+                </button>
+                <button type="submit" name="page" value="book">
+                    <i class="fas fa-book"></i> Book
+                </button>
+                <button type="submit" name="page" value="inventoryStatus">
+                    <i class="fas fa-chart-line"></i> Inventory Status
+                </button>
+                <button type="submit" name="page" value="studentList">
+                    <i class="fas fa-user"></i> Student List
+                </button>    
+            </form>
+
+            <!-- LOGOUT FORM -->
+            <form action="admin.php" method="POST">
+                <button type="submit" name="logout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </form>
+        </div>
+
+        <!-- BOX VISUALIZATION -->
+        <div class="box-container"></div>
     </nav>
 
     <!-- CONTENT CONTAINER -->

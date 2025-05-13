@@ -1,0 +1,137 @@
+:root {
+    --color-one-body: #222831;                  /* Dark base background */
+    --color-two-card-template: #2E343D;         /* Slightly lighter for cards/sections */
+    --color-three-border: #393E46;              /* Border tone that blends but separates */
+
+    --color-accent-primary: #00ADB5;            /* Bright cyan for buttons and links */
+    --color-accent-hover: #007D83;              /* Darker cyan for hover/active states */
+
+    --font-family-one: 'Noto Sans', sans-serif;
+
+    --text-color-primary: #EEEEEE;              /* Light gray-white for main text */
+    --text-color-secondary: #B0BEC5;            /* Soft gray for subtext */
+    --text-color-error: #F44336;                /* Bright red for errors */
+}
+
+
+
+body {
+    background: var(--color-one-body);
+    height: 100vh;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    background: var(--color-two-card-template);
+    color: var(--text-color-primary); 
+    padding: 30px;
+
+    border: none;
+    border-radius: 12px;
+
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+.login-container :where(form) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    p {
+        font-size: 13px;
+        color: var(--text-color-error);
+    }
+}
+
+.login-container :where(form) :where(.input-container) {
+    font-size: 16px;
+
+    display: flex;
+    align-items: center;
+
+    border: none;
+    border-radius: 8px;
+
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+
+    label {
+        background: var(--color-accent-primary);
+        color: var(--color-two-card-template);
+        padding: 10px 15px;
+        font-size: 14px;
+
+        border-left: 1px solid var(--color-five-soft-border-form-fields);
+        border-top: 1px solid var(--color-five-soft-border-form-fields);
+        border-bottom: 1px solid var(--color-five-soft-border-form-fields);
+        border-right: none;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    input {
+        background: var(--color-eight-form-container);
+        width: 300px;
+        padding: 10px 15px;
+        
+        border-top: 1px solid var(--color-five-soft-border-form-fields);
+        border-bottom: 1px solid var(--color-five-soft-border-form-fields);
+        border-left: 1px solid var(--color-five-soft-border-form-fields);
+        border-right: none;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+}
+
+.login-container :where(form) :where(.input-container) input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+
+.login-container :where(form) :where(.button-container) {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-container :where(form) :where(.button-container) :where(button) {
+    background: var(--color-accent-primary);
+    height: 40px;
+    width: 120px;
+    font-size: 14px;
+    color: var(--color-two-card-template);
+
+    border: 1px solid var(--color-three-border);
+    border-radius: 6px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    transition: all 0.3s ease;
+}
+
+.login-container :where(form) :where(.button-container) :where(button):hover {
+    background: var(--color-accent-hover);
+    border: none;
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.login-container :where(form) :where(.button-container) :where(button):focus {
+    outline: none;
+    transform: scale(1.05);
+    background: var(--color-accent-hover);
+    border: none;
+}

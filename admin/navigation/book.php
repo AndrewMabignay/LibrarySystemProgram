@@ -42,27 +42,38 @@ $dataBook = $showBook->showBook();
 ?>
 
 <div class="book-container">
-    <header>
-        <form action="admin.php?page=book" method="POST">
-            
-            <!-- SEARCH INPUT -->
-            <div class="search-container">
-                <input type="text" name="searchBook">
-                <button type="submit" name="search">SEARCH</button>
-            </div>
-
-            <!-- REFRESH BUTTON -->
-            <button type="submit" name="refreshBook">REFRESH</button>
-
-            <!-- ADD BUTTON -->
-            <button type="submit" name="addBookVerify">CREATE</button>
-        </form>
-
-
+    <header class="header-one">
+        <p>Hi Pogi</p>
     </header>
+
+        
+
+
 
     <div class="book-list-container">
         
+        <form action="admin.php?page=book" method="POST">
+            <h2>List of Books</h2>    
+
+            <div class="input-container">
+                
+
+                <!-- SEARCH INPUT -->
+                <div class="search-container">
+                    <input type="text" name="searchBook">
+                    <button type="submit" name="search">SEARCH</button>
+                </div>
+
+                <!-- REFRESH BUTTON -->
+                <button type="submit" name="refreshBook">REFRESH</button>
+
+                <!-- ADD BUTTON -->
+                <button type="submit" name="addBookVerify">CREATE</button>
+            </div>
+        </form>
+
+        <hr class="seperator-line">
+
         <!-- LIST OF BOOKS -->
         <div class="table-wrapper">
             <table>

@@ -44,3 +44,7 @@ CREATE TABLE books(
 INSERT INTO books(BookID, Title, Author, ISBN, Category, Copies) VALUES (?, ?, ?, ?, ?, ?);
 
 SELECT * FROM books WHERE BookID LIKE '%2%' OR Title LIKE '%1%' OR Author LIKE '%1%' OR ISBN LIKE '%1%' OR Category LIKE '%1%' OR Copies LIKE '%1%';
+
+
+----------- STORED PROCEDURE ADAPTATION -----------
+

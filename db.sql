@@ -48,3 +48,73 @@ SELECT * FROM books WHERE BookID LIKE '%2%' OR Title LIKE '%1%' OR Author LIKE '
 
 ----------- STORED PROCEDURE ADAPTATION -----------
 
+
+-- PREPARATION
+-- BORROWING | STUDENT
+
+
+-- DELIMITER FOR ADDING BOOK
+
+DELIMITER //
+
+CREATE PROCEDURE AddBook(
+    IN p_BookID VARCHAR(50),
+    IN p_Title VARCHAR(255),
+    IN p_Author VARCHAR(255),
+    IN p_ISBN VARCHAR(50),
+    IN p_Category VARCHAR(100),
+    IN p_Copies INT,
+    OUT p_message VARCHAR(255)
+)
+
+BEGIN
+    DECLARE duplicateCount INT DEFAULT 0;
+
+    -- CHECK FOR DUPLICATEE BookID
+    SELECT COUNT(*) INTO duplicateCount FROM books WHERE BookID = p_BookID;
+
+    IF duplicateCount > 0 THEN 
+        SET p_message = 'Duplicate Book ID is invalid.';
+    ELSE 
+        INSERT INTO books(BookID, Title, Author, ISBN, Category, Copies) VALUES 
+        (p_BookID, p_Title, p_Author, p_ISBN, p_Category, p_Copies);
+        SET p_message = 'Successfully Inserted';
+    END IF;
+END //
+
+DELIMITER ;
+
+CALL AddBook(?, ?, ?, ?, ?, ?, @message);
+
+SELECT @message AS message;
+
+-- DELIMITER FOR EDIT BOOK
+
+DELIMITER //
+
+CREATEE PROCEDURE EditBook(
+    IN p_BookID VARCHAR(50),
+    IN p_Title VARCHAR(255),
+    IN p_Author VARCHAR(255),
+    IN p_ISBN VARCHAR(50),
+    IN p_Category VARCHAR(100),
+    IN p_Copies INT,
+    OUT p_message VARCHAR(255)   
+)
+
+BEGIN
+    DECLARE duplicateCount INT DEFAULT 0;
+
+    -- CHECK FOR DUPLICATEE BookID
+    SELECT COUNT(*) INTO duplicateCount FROM books WHERE BookID = p_BookID AND BookID != ;
+
+    IF duplicateCount > 0 THEN 
+        SET p_message = 'Duplicate Book ID is invalid.';
+    ELSE 
+        INSERT INTO books(BookID, Title, Author, ISBN, Category, Copies) VALUES 
+        (p_BookID, p_Title, p_Author, p_ISBN, p_Category, p_Copies);
+        SET p_message = 'Successfully Inserted';
+    END IF;
+END //
+
+DELIMITER ;

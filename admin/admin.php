@@ -24,7 +24,16 @@ if (isset($_POST['book']) || $page == 'book') {
     ob_start();
     include('navigation/book.php');
     $content = ob_get_clean();
-} else if (isset($_POST['dashboard']) || $page == 'dashboard') {
+} else if (isset($_POST['borrowing']) || $page == 'borrowing') {
+    ob_start();
+    include('navigation/borrowing.php');
+    $content = ob_get_clean();
+} else if (isset($_POST['returning']) || $page == 'returning') {
+    ob_start();
+    include('navigation/returning.php');
+    $content = ob_get_clean();
+}
+else if (isset($_POST['dashboard']) || $page == 'dashboard') {
     ob_start();
     include('navigation/dashboard.php');
     $content = ob_get_clean();
@@ -65,15 +74,21 @@ if (isset($_POST['book']) || $page == 'book') {
                 <button type="submit" name="page" value="dashboard">
                     <i class="fas fa-columns"></i> Dashboard
                 </button>
+                <button type="submit" name="page" value="studentList">
+                    <i class="fas fa-user"></i> Student List
+                </button>
                 <button type="submit" name="page" value="book">
-                    <i class="fas fa-book"></i> Book
+                    <i class="fas fa-book"></i> Books
+                </button>
+                <button type="submit" name="page" value="borrowing">
+                    <i class="fas fa-user"></i> Borrowing
+                </button>
+                <button type="submit" name="page" value="returning">
+                    <i class="fas fa-user"></i> Returning
                 </button>
                 <button type="submit" name="page" value="inventoryStatus">
                     <i class="fas fa-chart-line"></i> Inventory Status
                 </button>
-                <button type="submit" name="page" value="studentList">
-                    <i class="fas fa-user"></i> Student List
-                </button>    
             </form>
 
             <!-- LOGOUT FORM -->
@@ -89,6 +104,14 @@ if (isset($_POST['book']) || $page == 'book') {
     </nav>
 
     <!-- CONTENT CONTAINER -->
-    <?php echo $content ?>
+    <div class="container">
+        <header class="header-one">
+            <i class="fa-solid fa-user-gear"></i>
+            <p>Hello, <?php echo $_SESSION['username'] . ' ' . '[' . $_SESSION['role'] . ']' ?></p>
+        </header>
+
+        <?php echo $content ?>
+    </div>
+    
 </body>
 </html>

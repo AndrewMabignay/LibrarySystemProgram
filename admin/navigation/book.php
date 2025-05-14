@@ -16,7 +16,7 @@ if (isset($_POST['addBook'])) {
 
     $addBook = new Model();
     $addBookPrompt = $addBook->addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $bookQuantity);
-    echo $addBookPrompt;
+    // echo $addBookPrompt;
 
     $addBookVerify = true;
 }
@@ -41,125 +41,145 @@ $dataBook = $showBook->showBook();
 
 ?>
 
-<div class="book-container">
-    <header class="header-one">
-        <p>Hi Pogi</p>
-    </header>
-
-        
 
 
+<div class="book-list-container">    
+    <form action="admin.php?page=book" method="POST">
+        <h2>List of Books</h2>    
 
-    <div class="book-list-container">
-        
-        <form action="admin.php?page=book" method="POST">
-            <h2>List of Books</h2>    
-
-            <div class="input-container">
-                
-
-                <!-- SEARCH INPUT -->
-                <div class="search-container">
-                    <input type="text" name="searchBook">
-                    <button type="submit" name="search">SEARCH</button>
-                </div>
-
-                <!-- REFRESH BUTTON -->
-                <button type="submit" name="refreshBook">REFRESH</button>
-
-                <!-- ADD BUTTON -->
-                <button type="submit" name="addBookVerify">CREATE</button>
+        <div class="input-container">
+            
+            <!-- SEARCH INPUT -->
+            <div class="search-container">
+                <input type="text" name="searchBook">
+                <button type="submit" name="search">
+                    <label for="">
+                        <i class="fas fa-search"></i>
+                    </label>
+                </button>
             </div>
-        </form>
 
-        <hr class="seperator-line">
+            <!-- REFRESH BUTTON -->
+            <button type="submit" name="refreshBook">
+                <i class="fas fa-sync"></i>
+            </button>
 
-        <!-- LIST OF BOOKS -->
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Book ID</th>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>ISBN</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- SEARCH OUTPUT -->
-                    <?php if(isset($searchField) && $searchField != ''): ?>
-                        <?php if(isset($searchDataBook) && count($searchDataBook) > 0): ?>
-                            <?php foreach($searchDataBook as $books): ?>
-                                <tr>
-                                    <td><?php echo $books['BookID'] ?></td>
-                                    <td><?php echo $books['Title'] ?></td>
-                                    <td><?php echo $books['Author'] ?></td>
-                                    <td><?php echo $books['ISBN'] ?></td>
-                                    <td><?php echo $books['Category'] ?></td>
-                                    <td><?php echo $books['Copies'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+            <!-- ADD BUTTON -->
+            <button type="submit" name="addBookVerify">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </form>
+
+    <hr class="seperator-line">
+
+    <!-- LIST OF BOOKS -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Book ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th>Category</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- SEARCH OUTPUT -->
+                <?php if(isset($searchField) && $searchField != ''): ?>
+                    <?php if(isset($searchDataBook) && count($searchDataBook) > 0): ?>
+                        <?php foreach($searchDataBook as $books): ?>
                             <tr>
-                                <td colspan="6">No Books Found!</td>
-                            </tr>    
-                        <?php endif; ?>
-
-                    <!-- SEARCH NULL VALUES -->
-                    <?php elseif(isset($searchField) && $searchField == ''): ?>
+                                <td><?php echo $books['BookID'] ?></td>
+                                <td><?php echo $books['Title'] ?></td>
+                                <td><?php echo $books['Author'] ?></td>
+                                <td><?php echo $books['ISBN'] ?></td>
+                                <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['Copies'] ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <tr>
                             <td colspan="6">No Books Found!</td>
-                        </tr>
+                        </tr>    
+                    <?php endif; ?>
 
-                    <!-- REFRESH TABLE -->
-                    <?php elseif(isset($refreshTable) && $refreshTable == true): ?>
-                        <?php if(count($dataBook) > 0): ?>
-                            <?php foreach($dataBook as $books): ?>
-                                <tr>
-                                    <td><?php echo $books['BookID'] ?></td>
-                                    <td><?php echo $books['Title'] ?></td>
-                                    <td><?php echo $books['Author'] ?></td>
-                                    <td><?php echo $books['ISBN'] ?></td>
-                                    <td><?php echo $books['Category'] ?></td>
-                                    <td><?php echo $books['Copies'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                <!-- SEARCH NULL VALUES -->
+                <?php elseif(isset($searchField) && $searchField == ''): ?>
+                    <tr>
+                        <td colspan="6">No Books Found!</td>
+                    </tr>
+
+                <!-- REFRESH TABLE -->
+                <?php elseif(isset($refreshTable) && $refreshTable == true): ?>
+                    <?php if(count($dataBook) > 0): ?>
+                        <?php foreach($dataBook as $books): ?>
                             <tr>
-                                <td colspan="6">Empty Books</td>
+                                <td><?php echo $books['BookID'] ?></td>
+                                <td><?php echo $books['Title'] ?></td>
+                                <td><?php echo $books['Author'] ?></td>
+                                <td><?php echo $books['ISBN'] ?></td>
+                                <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['Copies'] ?></td>
                             </tr>
-                        <?php endif; ?>
-
-                    <!-- DEFAULT -->
+                        <?php endforeach; ?>
                     <?php else: ?>
-                        <?php if(count($dataBook) > 0): ?>
-                            <?php foreach($dataBook as $books): ?>
-                                <tr>
-                                    <td><?php echo $books['BookID'] ?></td>
-                                    <td><?php echo $books['Title'] ?></td>
-                                    <td><?php echo $books['Author'] ?></td>
-                                    <td><?php echo $books['ISBN'] ?></td>
-                                    <td><?php echo $books['Category'] ?></td>
-                                    <td><?php echo $books['Copies'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                        <tr>
+                            <td colspan="6">Empty Books</td>
+                        </tr>
+                    <?php endif; ?>
+
+                <!-- DEFAULT -->
+                <?php else: ?>
+                    <?php if(count($dataBook) > 0): ?>
+                        <?php foreach($dataBook as $books): ?>
                             <tr>
-                                <td colspan="6">Empty Books</td>
+                                <td><?php echo $books['BookID'] ?></td>
+                                <td><?php echo $books['Title'] ?></td>
+                                <td><?php echo $books['Author'] ?></td>
+                                <td><?php echo $books['ISBN'] ?></td>
+                                <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['Copies'] ?></td>
+                                <td>
+                                    <form action="admin.php?page=book" method="POST">
+                                        <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
+                                        <input type="hidden" value="<?php echo $books['Title'] ?>" name="title">
+                                        <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
+                                        <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
+                                        <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
+                                        <input type="hidden" value="<?php echo $books['Copies'] ?>" name="copies">
+                                        <button type="submit" name="edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
-                        <?php endif; ?>
-                    <?php endif; // END CONDITION ?> 
-                </tbody>
-            </table>
-        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6">Empty Books</td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endif; // END CONDITION ?> 
+            </tbody>
+        </table>
+    </div>
 
-        
+    <!-- ADD BOOKS -->
+    <?php if(isset($addBookVerify) && $addBookVerify == true): ?>
+        <div class="overlay"></div>
+        <div class="add-book-container">
+            <form action="admin.php?page=book" method="POST" class="add-book-function">
+                <div class="close-container">
+                    <h2>Add Candidate</h2>
 
-        <!-- ADD BOOKS -->
-        <?php if(isset($addBookVerify) && $addBookVerify == true): ?>
-            <form action="admin.php?page=book" method="POST">
+                    <button type="submit" name="close">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
 
                 <!-- BOOK ID -->
                 <div class="input-container">
@@ -197,8 +217,23 @@ $dataBook = $showBook->showBook();
                     <input type="text" id="bookQuantity" name="bookQuantity" value="<?php  ?>">
                 </div>
 
-                <button type="submit" name="addBook">ADD</button>
+                <!-- MESSAGE DIALOG -->
+                <?php if (isset($addBookPrompt)): ?>
+                    <div class="alert-form">
+                        <?php if ($addBookPrompt == 'Successfully Inserted'): ?>
+                            <p style="color: green"><?php echo $addBookPrompt; ?></p>
+                        <?php else: ?>
+                            <p><?php echo $addBookPrompt; ?></p>
+                        <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <p></p>
+                <?php endif; ?>
+
+                <button type="submit" name="addBook" class="save">
+                    <i class="fas fa-save"></i> Create
+                </button>
             </form>
-        <?php endif; ?>
-    </div>
+        </div>            
+    <?php endif; ?>
 </div>

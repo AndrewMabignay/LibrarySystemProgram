@@ -212,42 +212,78 @@ class Model {
     }
 
     // 3. ADD BOOK
+    // public function addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
+    //     global $conn;
+
+    //     $this->query = "SELECT * FROM books WHERE BookID = ?";
+    //     $statement = $conn->prepare($this->query);
+    //     $statement->bind_param('s', $bookID);
+    //     $statement->execute();
+    //     $verify = $statement->get_result();
+
+    //     if ($verify->num_rows > 0) {
+    //         return 'Duplicate Book ID is Invalid.';
+    //     }
+
+    //     $this->query = "INSERT INTO books(BookID, Title, Author, ISBN, Category, Copies) VALUES (?, ?, ?, ?, ?, ?)";
+    //     $statement = $conn->prepare($this->query);
+    //     $statement->bind_param('sssssi', $bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
+        
+    //     return $statement->execute() ? 'Successfully Inserted' : 'Not successfully Inserted';        
+    // }   
+
     public function addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
         global $conn;
 
-        $this->query = "SELECT * FROM books WHERE BookID = ?";
-        $statement = $conn->prepare($this->query);
-        $statement->bind_param('s', $bookID);
-        $statement->execute();
-        $verify = $statement->get_result();
-
-        if ($verify->num_rows > 0) {
-            return 'Duplicate Book ID is Invalid.';
-        }
-
-        $this->query = "INSERT INTO books(BookID, Title, Author, ISBN, Category, Copies) VALUES (?, ?, ?, ?, ?, ?)";
+        $this->query = "CALL AddBook(?, ?, ?, ?, ?, ?, @message)";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('sssssi', $bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
-        
-        return $statement->execute() ? 'Successfully Inserted' : 'Not successfully Inserted';        
-    }   
+        $statement->execute();
+        $statement->close();
+
+        $result = $conn->query("SELECT @message AS message");
+        $row = $result->fetch_assoc();
+
+        return $row['message'];
+    }
+
+    // public function showBook() {
+    //     global $conn;
+
+    //     $this->query = "SELECT * FROM books";
+    //     $retrieve = \mysqli_query($conn, $this->query);
+
+    //     $rows = [];
+
+    //     if ($retrieve && mysqli_num_rows($retrieve) > 0) {
+    //         while ($row = mysqli_fetch_assoc($retrieve)) {
+    //             $rows[] = $row;
+    //         }
+    //     } 
+
+    //     return $rows;
+    // }
 
     public function showBook() {
         global $conn;
 
         $this->query = "SELECT * FROM books";
-        $retrieve = \mysqli_query($conn, $this->query);
+        $statement = $conn->prepare($this->query);
+        $statement->execute();
+        $result = $statement->get_result();
 
         $rows = [];
 
-        if ($retrieve && mysqli_num_rows($retrieve) > 0) {
-            while ($row = mysqli_fetch_assoc($retrieve)) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
                 $rows[] = $row;
             }
-        } 
+        }
 
         return $rows;
     }
+
+
 
     public function searchBook($input) {
         global $conn;

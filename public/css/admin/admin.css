@@ -455,6 +455,109 @@ nav :where(.box-container) {
     }
 }
 
+.container :where(.borrowing-list-container) :where(.seperator-line) {
+    margin: 25px 35px;
+    border: 1px solid var(--color-accent-hover);
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) {
+    height: 350px;
+    padding: 0px 40px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper)::-webkit-scrollbar {
+    width: 8px; 
+}
+  
+.container :where(.borrowing-list-container) :where(.table-wrapper)::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+  
+.container :where(.borrowing-list-container) :where(.table-wrapper)::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary); 
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+  
+.container :where(.borrowing-list-container) :where(.table-wrapper)::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-hover); 
+}
+  
+@keyframes fadeSlideInStatus {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) {
+    width: 100%;
+    padding: 0px 20px;
+    border-collapse: separate;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead) {
+    color: #1E293B;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(tbody) :where(tr) {
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+
+    transition: all 0.3s ease;   
+    animation: fadeSlideInStatus 0.6s ease forwards;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(tbody) :where(tr:hover) {
+    background: #EEF2FF;   
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead) :where(tr) :where(th) {
+    width: 100px;
+    height: 50px;
+    
+    font-size: 14px;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) {
+    /* border: 1px solid #E2E8F0; */
+    width: 100px;
+    height: 50px;
+
+    font-size: 12px;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead) :where(tr) {
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) :where(button) {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) :where(button[name="edit"]) :where(i) {
+    color: var(--color-accent-primary);
+}
+
 /* ================================ 4. END BORROWING CONTAINER ================================ */
 /* ================================ 5. ADD RETURNING CONTAINER ================================ */
 .container :where(.returning-list-container) {

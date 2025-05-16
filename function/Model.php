@@ -18,10 +18,16 @@ class Model {
             return 'Please enter both username and password.';
         }
 
-        $this->query = "SELECT * FROM {$this->databaseTable} WHERE Username = ?";
+        echo $username;
+        echo $password;
+
+        $this->query = "SELECT * FROM user WHERE Username = ?";
         $statement = $conn->prepare($this->query);
-        $statement->bind_param("s", $username);
+
+        $statement->bind_param('s', $username);
         $statement->execute();
+
+
         $result = $statement->get_result();
 
         if ($result->num_rows > 0) {
@@ -31,9 +37,9 @@ class Model {
             echo "Input Password: " . $password . "<br>";
             echo "Stored Hash: " . $users['Password'] . "<br>";
 
-            if (password_verify($password, $users['Password'])) {
+            // if (password_verify($password, $users['Password'])) {
 
-            // if ($password === $users['Password']) {
+            if ($password === $users['Password']) {
                 session_start();
                 $_SESSION['id'] = $users['ID'];
                 $_SESSION['username'] = $users['Username'];
@@ -232,12 +238,27 @@ class Model {
     //     return $statement->execute() ? 'Successfully Inserted' : 'Not successfully Inserted';        
     // }   
 
-    public function addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
+    // public function addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
+    //     global $conn;
+
+    //     $this->query = "CALL AddBook(?, ?, ?, ?, ?, ?, @message)";
+    //     $statement = $conn->prepare($this->query);
+    //     $statement->bind_param('sssssi', $bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
+    //     $statement->execute();
+    //     $statement->close();
+
+    //     $result = $conn->query("SELECT @message AS message");
+    //     $row = $result->fetch_assoc();
+
+    //     return $row['message'];
+    // }
+
+    public function addBook($bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
         global $conn;
 
-        $this->query = "CALL AddBook(?, ?, ?, ?, ?, ?, @message)";
+        $this->query = "CALL AddBook(?, ?, ?, ?, ?, @message)";
         $statement = $conn->prepare($this->query);
-        $statement->bind_param('sssssi', $bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
+        $statement->bind_param('ssssi', $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
         $statement->execute();
         $statement->close();
 

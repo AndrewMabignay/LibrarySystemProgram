@@ -47,7 +47,6 @@ $dataBook = $showBook->showBook();
                     <th>Author</th>
                     <th>ISBN</th>
                     <th>Category</th>
-                    <th>Quantity</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -62,7 +61,6 @@ $dataBook = $showBook->showBook();
                                 <td><?php echo $books['Author'] ?></td>
                                 <td><?php echo $books['ISBN'] ?></td>
                                 <td><?php echo $books['Category'] ?></td>
-                                <td><?php echo $books['Copies'] ?></td>
                                 <td>
                                     <form action="admin.php?page=book" method="POST">
                                         <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
@@ -70,7 +68,6 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
-                                        <input type="hidden" value="<?php echo $books['Copies'] ?>" name="copies">
                                         <button type="submit" name="editBookVerify">
                                             <i class="fas fa-edit"></i>
                                         </button>

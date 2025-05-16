@@ -1,10 +1,22 @@
-<?php 
+<?php
 
-if (isset($_POST['search'])) {
-    $searchField = $_POST['searchBook'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $bookTitle = $_POST['bookTitle'];
+    $bookAuthor = $_POST['bookAuthor'];
+    $bookISBN = $_POST['bookISBN'];
+    $bookCategory = $_POST['bookCategory'];
+    $bookCopyRight = $_POST['copyRight'];
+    $bookQuantity = $_POST['bookQuantity'];
 
     require_once '../function/Model.php';
 
-    $searchBook = new Model();
-    $searchDataBook = $searchBook->searchBook($searchField);
+    $model = new Model();
+    $result = $model->addBook($bookTitle, $bookAuthor, $bookISBN, $bookCategory, $bookCopyRight, $bookQuantity);
+
+    echo json_encode([
+        'status' => $result === 'Successfully Inserted' ? 'success' : 'error',
+        'message' => $result
+    ]);
 }
+
+?>

@@ -21,7 +21,7 @@ class Model {
         echo $username;
         echo $password;
 
-        $this->query = "SELECT * FROM user WHERE Username = ?";
+        $this->query = "SELECT * FROM {$this->databaseTable} WHERE Username = ?";
         $statement = $conn->prepare($this->query);
 
         $statement->bind_param('s', $username);
@@ -37,9 +37,9 @@ class Model {
             echo "Input Password: " . $password . "<br>";
             echo "Stored Hash: " . $users['Password'] . "<br>";
 
-            // if (password_verify($password, $users['Password'])) {
+            if (password_verify($password, $users['Password'])) {
 
-            if ($password === $users['Password']) {
+            // if ($password === $users['Password']) {
                 session_start();
                 $_SESSION['id'] = $users['ID'];
                 $_SESSION['username'] = $users['Username'];
@@ -253,12 +253,12 @@ class Model {
     //     return $row['message'];
     // }
 
-    public function addBook($bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies) {
+    public function addBook($bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copyRight, $copies) {
         global $conn;
 
-        $this->query = "CALL AddBook(?, ?, ?, ?, ?, @message)";
+        $this->query = "CALL AddBook(?, ?, ?, ?, ?, ?, @message)";
         $statement = $conn->prepare($this->query);
-        $statement->bind_param('ssssi', $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copies);
+        $statement->bind_param('ssssii', $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $copyRight, $copies);
         $statement->execute();
         $statement->close();
 

@@ -5,18 +5,17 @@ if (isset($_POST['addBookVerify'])) {
 }
 
 if (isset($_POST['addBook'])) {
-    $bookID = $_POST['bookID'];
     $bookTitle = $_POST['bookTitle'];
     $bookAuthor = $_POST['bookAuthor'];
     $bookISBN = $_POST['bookISBN'];
     $bookCategory = $_POST['bookCategory'];
+    $bookCopyRight = $_POST['copyRight'];
     $bookQuantity = $_POST['bookQuantity'];
 
     require_once '../function/Model.php';
 
     $addBook = new Model();
-    $addBookPrompt = $addBook->addBook($bookID, $bookTitle, $bookAuthor, $bookISBN, $bookCategory, $bookQuantity);
-    echo $addBookPrompt;
+    $addBookPrompt = $addBook->addBook($bookTitle, $bookAuthor, $bookISBN, $bookCategory, $bookCopyRight, $bookQuantity);
 
     $addBookVerify = true;
 }
@@ -98,6 +97,7 @@ $dataBook = $showBook->showBook();
                     <th>Author</th>
                     <th>ISBN</th>
                     <th>Category</th>
+                    <th>Copyright</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -112,6 +112,7 @@ $dataBook = $showBook->showBook();
                                 <td><?php echo $books['Author'] ?></td>
                                 <td><?php echo $books['ISBN'] ?></td>
                                 <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['CopyRight'] ?></td>
                                 <td>
                                     <form action="admin.php?page=book" method="POST">
                                         <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
@@ -215,12 +216,6 @@ $dataBook = $showBook->showBook();
                     </button>
                 </div>
 
-                <!-- BOOK ID -->
-                <div class="input-container">
-                    <label for="bookID">Book ID</label>
-                    <input type="text" id="bookID" name="bookID" value="<?php  ?>">
-                </div>
-
                 <!-- BOOK TITLE -->
                 <div class="input-container">
                     <label for="bookTitle">Book Title</label>
@@ -243,6 +238,12 @@ $dataBook = $showBook->showBook();
                 <div class="input-container">
                     <label for="bookCategory">Book Category</label>
                     <input type="text" id="bookCategory" name="bookCategory" value="<?php  ?>">
+                </div>
+
+                <!-- COPYRIGHT -->
+                <div class="input-container">
+                    <label for="copyRight">Copyright</label>
+                    <input type="number" name="copyRight" min="1000" max="9999">
                 </div>
 
                 <!-- BOOK QUANTITY -->

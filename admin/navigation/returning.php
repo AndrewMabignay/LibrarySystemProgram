@@ -1,6 +1,5 @@
 <?php 
-
-
+    
 ?>
 
 <div class="returning-list-container">

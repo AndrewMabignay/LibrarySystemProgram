@@ -29,3 +29,14 @@ Title | Copyright
 
 <!-- ADDITIONAL NOTES -->
 - When adding a borrowing, all fields should filled up.
+
+REQUIREMENTS : 
+• Student List Nav :
+  - Search [DONE]
+  - Add [DONE]
+  - Update 
+
+•
+
+NOTES :
+- User will only login when the account is active.

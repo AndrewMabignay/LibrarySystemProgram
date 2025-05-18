@@ -40,20 +40,24 @@ class Model {
             if (password_verify($password, $users['Password'])) {
 
             // if ($password === $users['Password']) {
-                session_start();
-                $_SESSION['id'] = $users['ID'];
-                $_SESSION['username'] = $users['Username'];
-                $_SESSION['password'] = $users['Password'];
-                $_SESSION['role'] = $users['Role'];
 
-                switch ($_SESSION['role']) {
-                    case 'Admin':
-                        header('Location: ../admin/admin.php');
-                        exit;
-                    case 'Student':
-                        header('Location: ../client/client.php');
-                        exit;
+                if ($users['Status'] == 'Active') {
+                    session_start();
+                    $_SESSION['id'] = $users['ID'];
+                    $_SESSION['username'] = $users['Username'];
+                    $_SESSION['password'] = $users['Password'];
+                    $_SESSION['role'] = $users['Role'];
+
+                    switch ($_SESSION['role']) {
+                        case 'Admin':
+                            header('Location: ../admin/admin.php');
+                            exit;
+                        case 'Student':
+                            header('Location: ../client/client.php');
+                            exit;
+                    }
                 }
+                
             } else {
                 return 'Invalid Password.';
             }
@@ -86,7 +90,7 @@ class Model {
             return 'Passwords do not match. Please try again.';
         }
 
-        $this->query = "SELECT * FROM student WHERE StudentID = ?";
+        $this->query = "SELECT * FROM students WHERE StudentID = ?";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('s', $studentNumber);
         $statement->execute();
@@ -97,7 +101,7 @@ class Model {
         }
 
         // ADD STUDENT
-        $this->query = "INSERT INTO student(StudentID, StudentName, Course, Major, YearLevel, Status) VALUES (?, ?, ?, ?, ?, ?)";
+        $this->query = "INSERT INTO students(StudentID, StudentName, Course, Major, YearLevel, Status) VALUES (?, ?, ?, ?, ?, ?)";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('ssssss', $studentNumber, $studentName, $course, $major, $yearLevel, $status);
         $statement->execute();
@@ -114,7 +118,7 @@ class Model {
     public function showStudent() {
         global $conn;
 
-        $this->query = "SELECT * FROM student";
+        $this->query = "SELECT * FROM students";
         $statement = mysqli_prepare($conn, $this->query);
         mysqli_stmt_execute($statement);
         $result = mysqli_stmt_get_result($statement);
@@ -164,7 +168,7 @@ class Model {
     public function editStudent($currentStudentNumber, $studentNumber, $studentName, $course, $major, $yearLevel, $status, $password, $verifyPassword) {
         global $conn;
 
-        $this->query = "SELECT * FROM student WHERE StudentID = ? AND StudentID != ?";
+        $this->query = "SELECT * FROM students WHERE StudentID = ? AND StudentID != ?";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('ss', $currentStudentNumber, $studentNumber);
         $statement->execute();
@@ -175,7 +179,7 @@ class Model {
         }
 
         // UPDATE STUDENT
-        $this->query = "UPDATE student SET StudentName = ?, Course = ?, Major = ?, YearLevel = ?, Status = ? WHERE StudentID = ?";
+        $this->query = "UPDATE students SET StudentName = ?, Course = ?, Major = ?, YearLevel = ?, Status = ? WHERE StudentID = ?";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('ssssss', $studentName, $course, $major, $yearLevel, $status, $studentNumber);
 
@@ -203,7 +207,7 @@ class Model {
     public function studentID($studentID) {
         global $conn;
 
-        $this->query = "SELECT * FROM student WHERE StudentID = '$studentID'";
+        $this->query = "SELECT * FROM students WHERE StudentID = '$studentID'";
         $retrieve = \mysqli_query($conn, $this->query);
 
         $rows = [];
@@ -213,6 +217,26 @@ class Model {
                 $rows[] = $row;
             }
         } 
+
+        return $rows;
+    }
+
+    public function searchStudentID($input) {
+        global $conn;
+
+        $this->query = "SELECT * FROM students WHERE StudentID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
 
         return $rows;
     }

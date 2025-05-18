@@ -60,6 +60,7 @@ else if (isset($_POST['dashboard']) || $page == 'dashboard') {
     <!-- CSS FILES -->
     <link rel="stylesheet" href="../public/css/general.css">
     <link rel="stylesheet" href="../public/css/admin/admin.css">
+    <link rel="stylesheet" href="../public/css/admin/studentList.css">
 
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">

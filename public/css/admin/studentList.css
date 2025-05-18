@@ -1,0 +1,281 @@
+/* ================================ 2. STUDENT LIST ================================ */
+.container :where(.student-container) {
+    height: 100%;
+    padding: 25px 0px;
+    background: var(--color-one-body);
+
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container :where(.student-container) :where(.student-container-form) {
+    color: var(--color-accent-primary);
+    padding: 0px 50px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+}
+
+.container :where(.student-container) :where(.student-container-form) :where(.input-container) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    button {
+        height: 40px;
+        width: 40px;
+        color: var(--text-color-primary);
+        background: var(--color-accent-primary);
+
+        border: none;
+        border-radius: 6px;
+
+        transition: all 0.3s ease;
+    }
+
+    .search-container {
+        display: flex;
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+        border-radius: 6px;
+    
+        input {
+            height: 40px;
+            width: 200px;
+            padding: 0px 12px;
+
+            background: var(--color-eight-form-container);
+            border-top: 1px solid lightgray;
+            border-left: 1px solid lightgray;
+            border-bottom: 1px solid lightgray;
+            border-right: none;
+
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
+        }
+
+        button {
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+    }
+}
+
+.container :where(.student-container) :where(.seperator-line) {
+    margin: 25px 35px;
+    border: 1px solid var(--color-accent-hover);
+}
+
+.container ::where(.student-container) :where(.table-wrapper) {
+    height: 350px;
+    padding: 0px 40px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.container :where(.student-container) :where(.table-wrapper)::-webkit-scrollbar {
+    width: 8px; 
+}
+  
+.container :where(.student-container) :where(.table-wrapper)::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+  
+.container :where(.student-container) :where(.table-wrapper)::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary); 
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+  
+.container :where(.student-container) :where(.table-wrapper)::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-hover); 
+}
+  
+@keyframes fadeSlideInStatus {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) {
+    width: 100%;
+    padding: 0px 20px;
+    border-collapse: separate;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead) {
+    color: #1E293B;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(tbody) :where(tr) {
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+
+    transition: all 0.3s ease;   
+    animation: fadeSlideInStatus 0.6s ease forwards;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(tbody) :where(tr:hover) {
+    background: #EEF2FF;   
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead) :where(tr) :where(th) {
+    width: 100px;
+    height: 50px;
+    
+    font-size: 14px;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) {
+    width: 100px;
+    height: 50px;
+
+    font-size: 12px;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead) :where(tr) {
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) :where(button) {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.container :where(.student-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) :where(button[name="edit"]) :where(i) {
+    color: var(--color-accent-primary);
+}
+
+.container :where(.student-container) :where(.overlay) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); 
+    z-index: 99;
+}
+
+.container :where(.student-container) :where(.add-container) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--text-color-primary);
+    padding: 30px;
+    border-radius: 10px;
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .input-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+
+        label {
+            font-size: 14px;
+        }
+
+        input {
+            height: 40px;
+            width: 200px;
+            background: var(--color-eight-form-container);
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 0px 10px;
+            border: none;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -.5px -.5px 0.5px rgba(0, 0, 0, 0.5);
+        }
+
+        select {
+            height: 40px;
+            width: 200px;
+            background: var(--color-eight-form-container);
+            border: none;
+            border-radius: 6px;
+            appearance: none;
+
+            padding: 0px 10px;
+            border: none;
+            box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5), -.5px -.5px 0.5px rgba(0, 0, 0, 0.5);
+        }
+    }
+
+    .alert-form {
+        color: var(--text-color-error);
+        font-size: 13px;
+    }
+} 
+
+.container :where(.student-container) :where(.add-container) :where(.grid-container) {
+    display: grid;
+    grid-template-columns: repeat(2, 350px);
+    gap: 20px;
+}
+
+.container :where(.student-container) :where(.add-container) :where(.button-container) {
+    
+    
+    display: flex;
+    justify-content: space-between;
+
+    button {
+        height: 45px;
+        width: 120px;
+
+        border: none;
+        border-radius: 8px;
+
+        box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back {
+        border: 2px solid var(--text-color-secondary);
+    }
+
+    .save {
+        background: var(--color-accent-primary);
+        color: var(--text-color-primary);        
+    }
+}
+/* ================================ 2. END STUDENT LIST ================================ */

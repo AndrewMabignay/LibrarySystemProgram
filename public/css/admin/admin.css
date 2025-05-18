@@ -105,6 +105,57 @@ nav :where(.box-container) {
 }
 
 
+
+
+/* ================================ 4. START BORROWING CONTAINER ================================ */
+.container :where(.borrowing-list-container) {
+    height: 100%;
+    padding: 25px 0px;
+    background: var(--color-one-body);
+
+    /* overflow-y: auto; */
+    /* overflow-x: hidden; */
+
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container :where(.borrowing-list-container) :where(.student-borrowing-input-container) :where(form) {
+    display: flex;
+    flex-direction: column;
+}
+
+.container :where(.borrowing-list-container) :where(.student-borrowing-input-container) :where(form) :where(.search-student-number, .student-personal-information) {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+        height: 40px;
+        padding: 0px 30px;
+    }
+}
+
+.container :where(.borrowing-list-container) :where(.student-borrowing-input-container) :where(form) :where(.search-student-number, .student-personal-information) :where(.input-container) {
+    width: 210px;
+    display: flex;
+    justify-content: space-between;
+
+    background-color: lightblue;
+
+    label {
+        font-size: 14px;
+    }
+    
+    input {
+        height: 30px;
+        width: 140px;
+        padding: 0px 8px;
+    }
+}
+
+/* ================================ 2. END STUDENT LIST ================================ */
+
 /* ================================ 3. BOOK ================================ */
 .container :where(.book-list-container) {
     height: 100%;
@@ -384,7 +435,7 @@ nav :where(.box-container) {
     color: var(--color-accent-primary);
 }
 
-/* ================================ 3. END BOOKS CONTAINER ================================ */
+
 
 /* ================================ 4. START BORROWING CONTAINER ================================ */
 .container :where(.borrowing-list-container) {
@@ -499,7 +550,7 @@ nav :where(.box-container) {
 }
 
 .container :where(.borrowing-list-container) :where(.table-wrapper) {
-    height: 350px;
+    max-height: 350px;
     padding: 0px 40px; 
     overflow-y: auto;
     overflow-x: hidden;

@@ -25,3 +25,7 @@ Category | Quantity.0
 - For Archieve [Button]
 Book that has 6 years+, it will display the following:
 Title | Copyright
+
+
+<!-- ADDITIONAL NOTES -->
+- When adding a borrowing, all fields should filled up.

@@ -80,3 +80,12 @@ CREATE TABLE add_to_lists(
     Date_To_List DATE NOT NULL,
     Time_To_List TIME NOT NULL
 );
+
+
+-- 05 / 18 / 2025
+SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL;
+
+SELECT b.*, br.BorrowDate, br.BorrowTime FROM books b JOIN borrowings br ON b.BookID = br.BookID WHERE TIMESTAMP(br.BorrowDate, br.BorrowTime) < NOW() - INTERVAL 3 DAY;
+
+-- DISPLAY BORROWED BOOK BASED ON USER ID
+SELECT b.*, br.BorrowDate, br.BorrowTime FROM borrowings br JOIN books b ON br.BookID = b.BookID WHERE br.UserID = 8;

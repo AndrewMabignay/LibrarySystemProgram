@@ -322,4 +322,9 @@ class Model {
 
         return $rows;
     }
+
+    // BORROWING 
+    public function addToList() {
+        
+    }
 }

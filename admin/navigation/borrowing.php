@@ -2,43 +2,152 @@
 
 require_once '../function/Model.php';
 
+if (isset($_POST['searchStudentID'])) {
+    $studentIDDisplay = $_POST['studentNumber'];
+
+    $searchStudentID = new Model();
+    $studentInformation = $searchStudentID->studentID($studentIDDisplay);
+
+    echo count($studentInformation);
+
+    $studentNameDisplay = '';
+    $courseDisplay = '';
+    $majorDisplay = '';
+    $yearLevelDisplay = '';
+
+    foreach ($studentInformation as $data) {
+        $studentNameDisplay = $data['StudentName'];
+        $courseDisplay = $data['Course'];
+        $majorDisplay = $data['Major'];
+        $yearLevelDisplay = $data['YearLevel'];
+    }
+}
+
 $showBook = new Model();
 $dataBook = $showBook->showBook();
 
 ?>
 
 <div class="borrowing-list-container">
-    <form action="admin.php?page=book" method="POST">
-        <h2>List of Book Borrowing</h2>    
-
-        <div class="input-container">
-            
-            <!-- SEARCH INPUT -->
-            <div class="search-container">
-                <input type="text" name="searchBook">
-                <button type="submit" name="search">
-                    <label for="">
-                        <i class="fas fa-search"></i>
-                    </label>
-                </button>
-            </div>
-
-            <!-- REFRESH BUTTON -->
-            <button type="submit" name="refreshBook">
-                <i class="fas fa-sync"></i>
-            </button>
-
-            <!-- ADD BUTTON -->
-            <button type="submit" name="addBookVerify">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-    </form>
+    
 
     <hr class="seperator-line">
 
     <!-- LIST OF BOOKS -->
     <div class="table-wrapper">
+        <div class="student-borrowing-input-container">
+            <form action="admin.php?page=borrowing" method="POST">
+                <!-- SEARCH STUDENT # -->
+                <div class="search-student-number">
+                    <div class="input-container">
+                        <label for="studentNumber">Student #</label>
+                        <input type="text" name="studentNumber" value="<?php echo isset($studentIDDisplay) ? $studentIDDisplay : '' ?>">
+                    </div>
+
+                    <!-- DATE -->
+                    <div class="input-container">
+                        <label for="date">Date</label>
+                        <input type="text" name="date" value="<?php echo date("Y-m-d") ?>">
+                    </div>
+
+                    <!-- TIME -->
+                    <div class="input-container">
+                        <label for="major">Time</label>
+                        <input type="text" name="time" value="<?php echo date("h:i:s A") ?>">
+                    </div>
+
+                    <button type="submit" name="searchStudentID">
+                        SEARCH STUDENT
+                    </button>
+                </div>
+
+                <!-- STUDENT PERSONAL INFORMATION -->
+                <div class="student-personal-information">
+
+                    <!-- STUDENT NAME -->
+                    <div class="input-container">
+                        <label for="studentName">Student Name</label>
+                        <input type="text" name="studentName" value="<?php echo isset($studentNameDisplay) ? $studentNameDisplay : '' ?>">
+                    </div>
+
+                    <?php date_default_timezone_set('Asia/Manila'); ?>
+
+                    
+
+                    <!-- COURSE -->
+                    <div class="input-container">
+                        <label for="course">Course</label>
+                        <input type="text" name="course" value="<?php echo isset($courseDisplay) ? $courseDisplay : '' ?>">
+                    </div>
+
+                    <!-- MAJOR -->
+                    <div class="input-container">
+                        <label for="major">Major</label>
+                        <input type="text" name="major" value="<?php echo isset($majorDisplay) ? $majorDisplay : '' ?>">
+                    </div>
+
+                    <!-- YEAR LEVEL -->
+                    <div class="input-container">
+                        <label for="yearLevel">Year Level</label>
+                        <input type="text" name="yearLevel" value="<?php echo isset($yearLevelDisplay) ? $yearLevelDisplay : '' ?>">
+                    </div>
+                </div>
+
+                <!-- SEARCH BOOKS -->
+                <div class="search-books-information">
+                    <div class="input-container">
+                        <label for="bookTitle">Book Title</label>
+                        <input type="text" name="yearLevel" value="<?php echo isset($yearLevelDisplay) ? $yearLevelDisplay : '' ?>">
+                    </div>
+                </div>
+
+                <!-- BOOK TABLE TESTING -->
+                 <table>
+                <thead>
+                    <tr>
+                        <th>Book ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Category</th>
+                        <th>Copyright</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <!-- DISPLAY BOOK BORROWING OUTPUT -->
+                    <?php foreach($dataBook as $books): ?>
+                        <tr>
+                            <td><?php echo $books['BookID'] ?></td>
+                            <td><?php echo $books['Title'] ?></td>
+                            <td><?php echo $books['Author'] ?></td>
+                            <td><?php echo $books['ISBN'] ?></td>
+                            <td><?php echo $books['Category'] ?></td>
+                            <td><?php echo $books['CopyRight'] ?></td>
+                            <td>
+                                <form>
+                                    
+                                
+                                    <input type="hidden" name="borrowID" value="<?php echo $books['BookID'] ?>">
+
+
+
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <!-- END BOOK BORROWING OUTPUT -->
+                </tbody>
+            </table>
+            </form>
+            
+            
+        </div>
+    
+
+        
+
         <table>
             <thead>
                 <tr>
@@ -154,4 +263,9 @@ $dataBook = $showBook->showBook();
             </tbody>
         </table>
     </div>
+
+    <!-- ADD STUDENT FOR BOOK BORROWING -->
+    <?php ?>
+        
+    <?php ?>
 </div>

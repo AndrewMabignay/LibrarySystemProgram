@@ -347,8 +347,146 @@ class Model {
         return $rows;
     }
 
-    // BORROWING 
+    // 4. ============================ BORROWING ============================   
     public function addToList() {
         
+    }
+
+    public function addBorrowBook($studentNumber, $studentName, $course, $major, $yearLevel, $bookID, $userID, $date, $time) {
+        global $conn;
+
+        // --- CONDITIONING ---
+        if ($studentNumber == '' || $studentName == '' || $course == '' || $major == '' || $yearLevel == '' || $bookID == '' || $userID == '' || $date == '' || $time == '') {
+            return 'Invalid Borrowing Book. Unidentified User';
+        } 
+
+        // --- START BORROW BOOK ---
+        // GET THE ID FROM THE USER.
+        $this->query = "SELECT ID FROM user WHERE Username = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $userID);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $row = $result->fetch_assoc();
+        $userID = $row['ID'];
+
+        // PERFORM BORROWING.
+        $this->query = "INSERT INTO borrowings(BookID, UserID, BorrowDate, BorrowTime) VALUES (?, ?, ?, ?)";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('iiss', $bookID, $userID, $date, $time);
+
+        return $statement->execute() ? 'Successfully Borrowed Book' : 'Not Successfully Borrowed Book';
+    }
+
+    public function searchStudentBorrowBook($input) {
+        global $conn;
+
+        $this->query = "SELECT * FROM students WHERE StudentID = ? AND Status = 'Active'";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    public function showAvailableBorrowBook() {
+        global $conn;
+
+        $this->query = "SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL";
+
+        $statement = $conn->prepare($this->query);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+
+    // 5. ============================ RETURNING ============================ 
+    public function addReturnBook($borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime) {
+        global $conn;
+
+        $this->query = "INSERT INTO returning(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime) VALUES (?, ?, ?, ?, ?, ?)";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('iissss', $borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime);
+        $statement->execute();
+   
+        $this->query = "DELETE FROM borrowings WHERE BorrowID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $borrowID);
+
+        return $statement->execute() ? 'Successfully Returned Book' : 'Not Successfully Returned Book';
+    }
+
+    public function showBorrowedBookForReturn($userID) {
+        global $conn;
+
+        // GET THE USERID FROM USER
+        $this->query = "SELECT ID FROM user WHERE Username = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $userID);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $row = $result->fetch_assoc();
+        if (!$row) {
+            return [];
+        }
+
+
+        $userID = $row['ID'];
+
+        // DISPLAY BORROWED BOOK FROM USER ID
+        $this->query = "SELECT 
+                    borrowings.BorrowID,
+                    books.BookID,
+                    books.Title,
+                    books.Author,
+                    books.ISBN,
+                    books.Category,
+                    books.CopyRight,
+                    borrowings.UserID,
+                    borrowings.BorrowDate,
+                    borrowings.BorrowTime,
+                    CASE 
+                        WHEN TIMESTAMPDIFF(HOUR, CONCAT(borrowings.BorrowDate, ' ', borrowings.BorrowTime), NOW()) > 72 
+                        THEN 'Yes'
+                        ELSE 'No'
+                    END AS Penalty
+                FROM books
+                JOIN borrowings ON books.BookID = borrowings.BookID
+                WHERE borrowings.UserID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $userID);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
     }
 }

@@ -1,0 +1,210 @@
+/* ================================ 5. ADD RETURNING CONTAINER ================================ */
+.container :where(.returning-list-container) {
+    height: 100%;
+    padding: 25px 0px;
+    background: var(--color-one-body);
+
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container :where(.returning-list-container) :where(.header-two) :where(h2) {
+    color: var(--color-accent-primary);
+    padding: 0px 50px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+
+.container :where(.returning-list-container) :where(.seperator-line) {
+    margin: 25px 40px;
+    border: 1px solid var(--color-accent-hover);
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) {
+    max-height: 350px;
+    padding: 0px 40px; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper)::-webkit-scrollbar {
+    width: 8px; 
+}
+  
+.container :where(.returning-list-container) :where(.table-wrapper)::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+    border-radius: 10px;
+}
+  
+.container :where(.returning-list-container) :where(.table-wrapper)::-webkit-scrollbar-thumb {
+    background: var(--color-accent-primary); 
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+  
+.container :where(.returning-list-container) :where(.table-wrapper)::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-hover); 
+}
+  
+@keyframes fadeSlideInStatus {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(.student-returning-input-container) :where(form) {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(.student-returning-input-container) :where(form) :where(.search-student-number) {
+    display: grid;
+    grid-template-columns: auto repeat(3, 1fr);
+    gap: 14px;
+    button {
+        width: 100px;
+    }
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(.student-returning-input-container) :where(form) :where(.search-student-number) :where(.input-container) {
+    width: 250px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    label {
+        font-size: 14px;
+    }
+    
+    input {
+        height: 35px;
+        width: 140px;
+        padding: 0px 8px;
+        background: var(--color-one-body);
+
+        border: 1px solid var(--color-accent-primary);
+        border-radius: 6px;
+    }
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(.student-returning-input-container) :where(form) :where(.search-student-number) :where(.button) {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    button {
+        height: 45px;
+        width: 165px;
+
+        color: var(--text-color-primary);
+        background: var(--color-accent-primary);
+
+        border: none;
+        border-radius: 6px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(.student-returning-input-container) :where(form) :where(.seperator-line-table) {
+    margin: 25px 0px;
+    border: 1px solid var(--color-accent-hover);
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) {
+    width: 100%;
+    padding: 0px 20px;
+    border-collapse: separate;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(thead) {
+    color: #1E293B;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(tbody) :where(tr) {
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+
+    transition: all 0.3s ease;   
+    animation: fadeSlideInStatus 0.6s ease forwards;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(tbody) :where(tr:hover) {
+    background: #EEF2FF;   
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(thead) :where(tr) :where(th) {
+    width: 100px;
+    height: 50px;
+    
+    font-size: 14px;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) {
+    width: 100px;
+    height: 50px;
+
+    font-size: 12px;
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(thead) :where(tr) {
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2);
+}
+
+.container :where(.returning-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+#penaltyNo {
+    padding: 5px 25px;
+    background: #007F67;
+    color: var(--text-color-primary);
+
+    border: none;
+    border-radius: 30px;
+}
+
+#penaltyYes {
+    padding: 5px 25px;
+    background: #B34747;
+    color: var(--text-color-primary);
+
+    border: none;
+    border-radius: 30px; 
+}
+
+#returned {
+    background: var(--color-accent-primary);
+    color: var(--text-color-primary);
+    padding: 10px 15px;
+
+    border: none;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+#returned:hover {
+    
+}
+
+
+/* ================================ 4. END BORROWING CONTAINER ================================ */

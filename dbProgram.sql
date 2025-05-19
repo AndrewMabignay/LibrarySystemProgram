@@ -89,3 +89,57 @@ SELECT b.*, br.BorrowDate, br.BorrowTime FROM books b JOIN borrowings br ON b.Bo
 
 -- DISPLAY BORROWED BOOK BASED ON USER ID
 SELECT b.*, br.BorrowDate, br.BorrowTime FROM borrowings br JOIN books b ON br.BookID = b.BookID WHERE br.UserID = 8;
+
+-- 05 / 19 / 2025
+SELECT ID FROM user WHERE Username = '2022-10029';
+
+-- DISPLAY STATUS EITHER AVAILABLE OR BORROWED BOOK [INVENTORY]
+SELECT 
+    b.BookID,
+    b.Title,
+    b.Author,
+    b.ISBN,
+    b.Category,
+    b.CopyRight,
+    CASE 
+        WHEN br.BookID IS NOT NULL THEN 'Borrowed'
+        ELSE 'Available'
+    END AS Status
+FROM 
+    books b
+LEFT JOIN 
+    borrowings br ON b.BookID = br.BookID;
+
+-- RETURNING TABLE
+CREATE TABLE returning(
+    ReturnID INT PRIMARY KEY AUTO_INCREMENT,
+    BorrowID INT NOT NULL,
+    UserID INT NOT NULL,
+    BorrowDate DATE NOT NULL,
+    BorrowTime TIME NOT NULL,
+    ReturnDate DATE NOT NULL,
+    ReturnTime TIME NOT NULL,
+    Penalty ENUM('Yes', 'No') DEFAULT 'No'
+);
+
+-- DISPLAY BOOKS BASED BOOK ID UNDER BORROWING
+SELECT 
+    borrowings.BorrowID,
+    books.BookID,
+    books.Title,
+    books.Author,
+    books.ISBN,
+    books.Category,
+    books.CopyRight,
+    borrowings.UserID,
+    borrowings.BorrowDate,
+    borrowings.BorrowTime
+FROM books
+JOIN borrowings ON books.BookID = borrowings.BookID
+WHERE borrowings.UserID = ?;
+
+ALTER TABLE returning DROP COLUMN Penalty;
+
+ALTER TABLE borrowings ADD COLUMN Penalty ENUM('Yes', 'No') DEFAULT 'No' AFTER BorrowTime;
+
+INSERT INTO returning(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime) VALUES (1, 1, '2025-06-15', '05:15:25', '2025-06-15', '05:15:25');

@@ -4,11 +4,14 @@ require_once '../function/Model.php';
 
 if (isset($_POST['searchStudentID'])) {
     $studentIDDisplay = $_POST['studentNumber'];
+    $studentIDUserDisplay = $studentIDDisplay;
 
     $searchStudentID = new Model();
-    $studentInformation = $searchStudentID->studentID($studentIDDisplay);
+    $studentInformation = $searchStudentID->searchStudentBorrowBook($studentIDDisplay);
 
-    echo count($studentInformation);
+    if (count($studentInformation) == 0) {
+        $studentIDDisplay = '';
+    } 
 
     $studentNameDisplay = '';
     $courseDisplay = '';
@@ -23,13 +26,38 @@ if (isset($_POST['searchStudentID'])) {
     }
 }
 
+// MAINTENANCE | BORROW BOOK
+if (isset($_POST['borrowBook'])) {
+    // STUDENT #
+    $studentNumber = $_POST['studentNumber'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+
+    // STUDENT INFORMATION
+    $studentName = $_POST['studentName'];
+    $course = $_POST['course'];
+    $major = $_POST['major'];
+    $yearLevel = $_POST['yearLevel'];
+
+    // BORROWING FIELDS
+    $bookID = $_POST['bookID'];
+    $userID = $_POST['userID'];
+
+    $borrowBook = new Model();
+    $borrowBookPrompt = $borrowBook->addBorrowBook($studentNumber, $studentName, $course, $major, $yearLevel, $bookID, $userID, $date, $time);    
+    echo $borrowBookPrompt;
+} 
+
+
 $showBook = new Model();
-$dataBook = $showBook->showBook();
+$dataBook = $showBook->showAvailableBorrowBook();
 
 ?>
 
 <div class="borrowing-list-container">
-    
+    <div class="header-two">
+        <h2>List of Book Borrowing</h2>    
+    </div>
 
     <hr class="seperator-line">
 
@@ -41,8 +69,10 @@ $dataBook = $showBook->showBook();
                 <div class="search-student-number">
                     <div class="input-container">
                         <label for="studentNumber">Student #</label>
-                        <input type="text" name="studentNumber" value="<?php echo isset($studentIDDisplay) ? $studentIDDisplay : '' ?>">
+                        <input type="text" name="studentNumber" value="<?php echo isset($studentIDUserDisplay) ? $studentIDUserDisplay : '' ?>">
                     </div>
+
+                    <?php date_default_timezone_set('Asia/Manila'); ?>
 
                     <!-- DATE -->
                     <div class="input-container">
@@ -53,7 +83,7 @@ $dataBook = $showBook->showBook();
                     <!-- TIME -->
                     <div class="input-container">
                         <label for="major">Time</label>
-                        <input type="text" name="time" value="<?php echo date("h:i:s A") ?>">
+                        <input type="text" name="time" value="<?php echo date("H:i:s") ?>">
                     </div>
 
                     <button type="submit" name="searchStudentID">
@@ -69,10 +99,6 @@ $dataBook = $showBook->showBook();
                         <label for="studentName">Student Name</label>
                         <input type="text" name="studentName" value="<?php echo isset($studentNameDisplay) ? $studentNameDisplay : '' ?>">
                     </div>
-
-                    <?php date_default_timezone_set('Asia/Manila'); ?>
-
-                    
 
                     <!-- COURSE -->
                     <div class="input-container">
@@ -103,165 +129,45 @@ $dataBook = $showBook->showBook();
 
                 <!-- BOOK TABLE TESTING -->
                  <table>
-                <thead>
-                    <tr>
-                        <th>Book ID</th>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>ISBN</th>
-                        <th>Category</th>
-                        <th>Copyright</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <!-- DISPLAY BOOK BORROWING OUTPUT -->
-                    <?php foreach($dataBook as $books): ?>
+                    <thead>
                         <tr>
-                            <td><?php echo $books['BookID'] ?></td>
-                            <td><?php echo $books['Title'] ?></td>
-                            <td><?php echo $books['Author'] ?></td>
-                            <td><?php echo $books['ISBN'] ?></td>
-                            <td><?php echo $books['Category'] ?></td>
-                            <td><?php echo $books['CopyRight'] ?></td>
-                            <td>
-                                <form>
-                                    
-                                
-                                    <input type="hidden" name="borrowID" value="<?php echo $books['BookID'] ?>">
-
-
-
-                                </form>
-                            </td>
+                            <th>Book ID</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>ISBN</th>
+                            <th>Category</th>
+                            <th>Copyright</th>
+                            <th>Action</th>
                         </tr>
-                    <?php endforeach; ?>
-                    <!-- END BOOK BORROWING OUTPUT -->
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <!-- DISPLAY BOOK BORROWING OUTPUT -->
+                        <?php foreach($dataBook as $books): ?>
+                            <tr>
+                                <td><?php echo $books['BookID'] ?></td>
+                                <td><?php echo $books['Title'] ?></td>
+                                <td><?php echo $books['Author'] ?></td>
+                                <td><?php echo $books['ISBN'] ?></td>
+                                <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['CopyRight'] ?></td>
+                                <td>
+                                    <form>
+                                        <input type="text" name="bookID" value="<?php echo $books['BookID'] ?>">
+                                        <input type="text" name="userID" value="<?php echo isset($studentIDDisplay) ? $studentIDDisplay : '' ?>">
+                                        
+                                        
+                                        <button type="submit" name="borrowBook">
+                                            Borrow
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        <!-- END BOOK BORROWING OUTPUT -->
+                    </tbody>
+                </table>
             </form>
-            
-            
         </div>
-    
-
-        
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Book ID</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>ISBN</th>
-                    <th>Category</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- SEARCH OUTPUT -->
-                <?php if(isset($searchField) && $searchField != ''): ?>
-                    <?php if(isset($searchDataBook) && count($searchDataBook) > 0): ?>
-                        <?php foreach($searchDataBook as $books): ?>
-                            <tr>
-                                <td><?php echo $books['BookID'] ?></td>
-                                <td><?php echo $books['Title'] ?></td>
-                                <td><?php echo $books['Author'] ?></td>
-                                <td><?php echo $books['ISBN'] ?></td>
-                                <td><?php echo $books['Category'] ?></td>
-                                <td>
-                                    <form action="admin.php?page=book" method="POST">
-                                        <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
-                                        <input type="hidden" value="<?php echo $books['Title'] ?>" name="title">
-                                        <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
-                                        <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
-                                        <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
-                                        <button type="submit" name="editBookVerify">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7">No Books Found!</td>
-                        </tr>    
-                    <?php endif; ?>
-
-                <!-- SEARCH NULL VALUES -->
-                <?php elseif(isset($searchField) && $searchField == ''): ?>
-                    <tr>
-                        <td colspan="7">No Books Found!</td>
-                    </tr>
-
-                <!-- REFRESH TABLE -->
-                <?php elseif(isset($refreshTable) && $refreshTable == true): ?>
-                    <?php if(count($dataBook) > 0): ?>
-                        <?php foreach($dataBook as $books): ?>
-                            <tr>
-                                <td><?php echo $books['BookID'] ?></td>
-                                <td><?php echo $books['Title'] ?></td>
-                                <td><?php echo $books['Author'] ?></td>
-                                <td><?php echo $books['ISBN'] ?></td>
-                                <td><?php echo $books['Category'] ?></td>
-                                <td><?php echo $books['Copies'] ?></td>
-                                <td>
-                                    <form action="admin.php?page=book" method="POST">
-                                        <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
-                                        <input type="hidden" value="<?php echo $books['Title'] ?>" name="title">
-                                        <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
-                                        <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
-                                        <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
-                                        <input type="hidden" value="<?php echo $books['Copies'] ?>" name="copies">
-                                        <button type="submit" name="edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7">Empty Books</td>
-                        </tr>
-                    <?php endif; ?>
-
-                <!-- DEFAULT -->
-                <?php else: ?>
-                    <?php if(count($dataBook) > 0): ?>
-                        <?php foreach($dataBook as $books): ?>
-                            <tr>
-                                <td><?php echo $books['BookID'] ?></td>
-                                <td><?php echo $books['Title'] ?></td>
-                                <td><?php echo $books['Author'] ?></td>
-                                <td><?php echo $books['ISBN'] ?></td>
-                                <td><?php echo $books['Category'] ?></td>
-                                <td><?php echo $books['Copies'] ?></td>
-                                <td>
-                                    <form action="admin.php?page=book" method="POST">
-                                        <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
-                                        <input type="hidden" value="<?php echo $books['Title'] ?>" name="title">
-                                        <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
-                                        <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
-                                        <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
-                                        <input type="hidden" value="<?php echo $books['Copies'] ?>" name="copies">
-                                        <button type="submit" name="edit">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="7">Empty Books</td>
-                        </tr>
-                    <?php endif; ?>
-                <?php endif; // END CONDITION ?> 
-            </tbody>
-        </table>
     </div>
 
     <!-- ADD STUDENT FOR BOOK BORROWING -->

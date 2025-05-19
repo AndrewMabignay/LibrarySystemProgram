@@ -56,7 +56,7 @@ $dataBook = $showBook->showAvailableBorrowBook();
 
 <div class="borrowing-list-container">
     <div class="header-two">
-        <h2>List of Book Borrowing</h2>    
+        <h2>Book Borrowing</h2>    
     </div>
 
     <hr class="seperator-line">
@@ -86,13 +86,11 @@ $dataBook = $showBook->showAvailableBorrowBook();
                         <input type="text" name="time" value="<?php echo date("H:i:s") ?>">
                     </div>
 
-                    <button type="submit" name="searchStudentID">
-                        SEARCH STUDENT
-                    </button>
-                </div>
-
-                <!-- STUDENT PERSONAL INFORMATION -->
-                <div class="student-personal-information">
+                    <div class="button">
+                        <button type="submit" name="searchStudentID">
+                            SEARCH STUDENT
+                        </button>
+                    </div>
 
                     <!-- STUDENT NAME -->
                     <div class="input-container">
@@ -118,6 +116,8 @@ $dataBook = $showBook->showAvailableBorrowBook();
                         <input type="text" name="yearLevel" value="<?php echo isset($yearLevelDisplay) ? $yearLevelDisplay : '' ?>">
                     </div>
                 </div>
+
+                <hr class="seperator-line-table">
 
                 <!-- SEARCH BOOKS -->
                 <div class="search-books-information">

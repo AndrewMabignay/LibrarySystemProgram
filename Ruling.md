@@ -34,9 +34,14 @@ REQUIREMENTS :
 • Student List Nav :
   - Search [DONE]
   - Add [DONE]
-  - Update 
+  - Update []
 
-•
+• Books Nav : 
+  - Search []
+  - Add []
+  - Update []
+
+• 
 
 NOTES :
 - User will only login when the account is active.

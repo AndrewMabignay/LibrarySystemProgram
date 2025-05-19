@@ -143,3 +143,10 @@ ALTER TABLE returning DROP COLUMN Penalty;
 ALTER TABLE borrowings ADD COLUMN Penalty ENUM('Yes', 'No') DEFAULT 'No' AFTER BorrowTime;
 
 INSERT INTO returning(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime) VALUES (1, 1, '2025-06-15', '05:15:25', '2025-06-15', '05:15:25');
+
+
+-- 05/20/2025
+ALTER TABLE books
+ADD COLUMN Status ENUM('available', 'reserved', 'borrowed') DEFAULT 'available',
+ADD COLUMN ReservedBy INT NULL,
+ADD COLUMN ReservedAt DATETIME NULL;

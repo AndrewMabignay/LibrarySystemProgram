@@ -4,7 +4,18 @@ $view = isset($_POST['viewInventory']) ? $_POST['viewInventory'] : 'allBooks';
 echo $view;
 
 
+require_once '../function/Model.php';
 
+$displayAllBooks = new Model();
+$bookDisplay = $displayAllBooks->inventoryAllBooks();
+
+switch ($view) {
+    case 'allBooks':
+        break;
+    case 'bookCategory':
+        $bookDisplay = $displayAllBooks->inventoryBookCategory();
+        break;
+}
 
 ?>
 
@@ -50,5 +61,28 @@ echo $view;
                 <i class="fas fa-archive"></i> ARCHIEVE BOOK 
             </button>
         </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <?php ?>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($bookDisplay as $books): ?>
+                    <tr>
+                        <td><?php echo $books['BookID'] ?></td>
+                        <td><?php echo $books['Title'] ?></td>
+                        <td><?php echo $books['Author'] ?></td>
+                        <td><?php echo $books['ISBN'] ?></td>
+                        <td><?php echo $books['Category'] ?></td>
+                        <td><?php echo $books['CopyRight'] ?></td>
+                    </tr>
+
+                <?php endforeach; ?>
+
+                
+            </tbody>
+        </table>
     </div>
 </div>

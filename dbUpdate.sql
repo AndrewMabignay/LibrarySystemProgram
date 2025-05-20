@@ -43,6 +43,14 @@ DESC borrowings;
 +------------+------+------+-----+---------+----------------+
 5 rows in set (0.01 sec)
 
+CREATE TABLE add_to_list(
+    ListID INT PRIMARY KEY AUTO_INCREMENT,
+    BookID INT NOT NULL,
+    UserID INT NOT NULL
+);
+
+INSERT INTO add_to_list(BookID, UserID) VALUES (5, 8);
+
 CREATE TABLE borrowings(
     BorrowID INT PRIMARY KEY AUTO_INCREMENT,
     BookID INT NOT NULL,

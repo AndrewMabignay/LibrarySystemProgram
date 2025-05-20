@@ -171,5 +171,5 @@ WHERE (r.ReturnDate, r.ReturnTime) IN (
 )
 GROUP BY r.BookID;
 
-
-
+-- INVENTORY GROUP BY
+SELECT COUNT(*) AS 'Quantity' FROM books GROUP BY Category

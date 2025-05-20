@@ -348,11 +348,7 @@ class Model {
     }
 
     // 4. ============================ BORROWING ============================   
-    public function addToList() {
-        
-    }
-
-    public function addBorrowBook($studentNumber, $studentName, $course, $major, $yearLevel, $bookID, $userID, $date, $time) {
+    public function addToList($studentNumber, $studentName, $course, $major, $yearLevel, $bookID, $userID, $date, $time) {
         global $conn;
 
         // --- CONDITIONING ---
@@ -360,7 +356,7 @@ class Model {
             return 'Invalid Borrowing Book. Unidentified User';
         } 
 
-        // --- START BORROW BOOK ---
+        // --- START ADD TO LIST BOOK ---
         // GET THE ID FROM THE USER.
         $this->query = "SELECT ID FROM user WHERE Username = ?";
         $statement = $conn->prepare($this->query);
@@ -370,6 +366,64 @@ class Model {
 
         $row = $result->fetch_assoc();
         $userID = $row['ID'];
+
+        // PERFORM ADD TO LIST.
+        $this->query = "INSERT INTO add_to_list(BookID, UserID) VALUES (?, ?)";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('ii', $bookID, $userID);
+        $statement->execute();
+
+        // UPDATE STATUS BOOKS [RESERVED].
+        $this->query = "UPDATE books SET Status = 'Reserved' WHERE BookID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $bookID);
+
+        return $statement->execute() ? 'Successfully Add to List Book' : 'Not Successfully Borrowed Book';
+    }
+
+    public function showAddToList($userID) {
+        global $conn;
+
+        // GET THE ID FROM THE USER.
+        $this->query = "SELECT ID FROM user WHERE Username = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $userID);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $row = $result->fetch_assoc();
+        if (!$row) {
+            return [];
+        }
+        $userID = $row['ID'];
+
+        $this->query = "SELECT b.*, a.UserID
+            FROM books b
+            JOIN add_to_list a ON b.BookID = a.BookID
+            WHERE a.UserID = ? AND b.Status = 'Reserved'";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $userID);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    public function addBorrowBook($bookID, $userID, $date, $time) {
+        global $conn;
+
+        // --- CONDITIONING ---
+        if ($bookID == '' || $userID == '' || $date == '' || $time == '') {
+            return 'Invalid Borrowing Book. Unidentified User';
+        } 
 
         // PERFORM BORROWING.
         $this->query = "INSERT INTO borrowings(BookID, UserID, BorrowDate, BorrowTime) VALUES (?, ?, ?, ?)";
@@ -408,7 +462,7 @@ class Model {
     public function showAvailableBorrowBook() {
         global $conn;
 
-        $this->query = "SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL";
+        $this->query = "SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL AND Status = 'Available'";
 
         $statement = $conn->prepare($this->query);
         $statement->execute();
@@ -430,7 +484,7 @@ class Model {
     public function addReturnBook($borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime, $bookID) {
         global $conn;
 
-        $this->query = "INSERT INTO `returning`(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime, BookID) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $this->query = "INSERT INTO returning(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime, BookID) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('iissssi', $borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime, $bookID);
         $statement->execute();
@@ -495,4 +549,45 @@ class Model {
 
         return $rows;
     }
+
+    // 6. ============================ INVENTORY [ALL BOOKS] ============================
+    public function inventoryAllBooks() {
+        global $conn;
+
+        $this->query = "SELECT * FROM books";
+        $statement = $conn->prepare($this->query);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;       
+    }
+
+    public function inventoryBookCategory() {
+        global $conn;
+
+        $this->query = "SELECT COUNT(*) AS 'Quantity' FROM books GROUP BY Category";
+        $statement = $conn->prepare($this->query);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    public function inventoryArchieveBook() {}
 }

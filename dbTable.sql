@@ -1,0 +1,9 @@
+CREATE TABLE books (
+  BookID INT PRIMARY KEY AUTO_INCREMENT,
+  Title VARCHAR(255) NOT NULL,
+  Author VARCHAR(255) NOT NULL,
+  ISBN VARCHAR(100) NOT NULL,
+  Category VARCHAR(100) NOT NULL,
+  CopyRight YEAR NOT NULL,
+  Status ENUM('Reserved', 'Available', 'Borrowed')
+);

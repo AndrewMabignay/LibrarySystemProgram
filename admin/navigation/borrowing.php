@@ -85,9 +85,10 @@ $dataBook = $showBook->showAvailableBorrowBook();
                         <label for="major">Time</label>
                         <input type="text" name="time" value="<?php echo date("H:i:s") ?>">
                     </div>
-
-                    <div class="button">
+                    
+                    <div class="input-container button">
                         <button type="submit" name="searchStudentID">
+                            <i class="fas fa-user"></i>
                             SEARCH STUDENT
                         </button>
                     </div>

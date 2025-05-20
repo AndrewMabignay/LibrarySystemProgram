@@ -150,3 +150,26 @@ ALTER TABLE books
 ADD COLUMN Status ENUM('available', 'reserved', 'borrowed') DEFAULT 'available',
 ADD COLUMN ReservedBy INT NULL,
 ADD COLUMN ReservedAt DATETIME NULL;
+
+-- INVENTORY FOR VIEWING
+SELECT 
+    r.BookID,
+    b.Title,
+    b.Author,
+    b.Category,
+    b.Status,
+    CONCAT(r.ReturnDate, ' ', r.ReturnTime) AS `Last Accessed`,
+    u.Username AS `Last User`
+FROM `returning` r
+JOIN books b ON r.BookID = b.BookID
+JOIN user u ON r.UserID = u.ID
+WHERE (r.ReturnDate, r.ReturnTime) IN (
+    SELECT 
+        MAX(ReturnDate), MAX(ReturnTime)
+    FROM `returning` r2
+    WHERE r2.BookID = r.BookID
+)
+GROUP BY r.BookID;
+
+
+

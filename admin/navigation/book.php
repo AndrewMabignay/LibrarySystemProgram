@@ -28,6 +28,7 @@ if (isset($_POST['editBookVerifiy'])) {
     $editAuthor = $_POST['author'];
     $editISBN = $_POST['isbn'];
     $editCategory = $_POST['category'];
+    $editCopyright = $_POST['copyright'];
     $editCopies = $_POST['copies'];
 }
 
@@ -120,6 +121,7 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
+                                        <input type="hidden" value="<?php echo $books['CopyRight'] ?>" name="copyright">
                                         <button type="submit" name="editBookVerify">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -129,14 +131,14 @@ $dataBook = $showBook->showBook();
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6">No Books Found!</td>
+                            <td colspan="7">No Books Found!</td>
                         </tr>    
                     <?php endif; ?>
 
                 <!-- SEARCH NULL VALUES -->
                 <?php elseif(isset($searchField) && $searchField == ''): ?>
                     <tr>
-                        <td colspan="6">No Books Found!</td>
+                        <td colspan="7">No Books Found!</td>
                     </tr>
 
                 <!-- REFRESH TABLE -->
@@ -149,6 +151,7 @@ $dataBook = $showBook->showBook();
                                 <td><?php echo $books['Author'] ?></td>
                                 <td><?php echo $books['ISBN'] ?></td>
                                 <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['CopyRight'] ?></td>
                                 <td>
                                     <form action="admin.php?page=book" method="POST">
                                         <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
@@ -156,6 +159,7 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
+                                        <input type="hidden" value="<?php echo $books['CopyRight'] ?>" name="copyright">
                                         <button type="submit" name="edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -165,7 +169,7 @@ $dataBook = $showBook->showBook();
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6">Empty Books</td>
+                            <td colspan="7">Empty Books</td>
                         </tr>
                     <?php endif; ?>
 
@@ -179,6 +183,7 @@ $dataBook = $showBook->showBook();
                                 <td><?php echo $books['Author'] ?></td>
                                 <td><?php echo $books['ISBN'] ?></td>
                                 <td><?php echo $books['Category'] ?></td>
+                                <td><?php echo $books['CopyRight'] ?></td>
                                 <td>
                                     <form action="admin.php?page=book" method="POST">
                                         <input type="hidden" value="<?php echo $books['BookID'] ?>" name="bookID">
@@ -186,6 +191,7 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['Author'] ?>" name="author">
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
+                                        <input type="hidden" value="<?php echo $books['CopyRight'] ?>" name="copyright">
                                         <button type="submit" name="edit">
                                             <i class="fas fa-edit"></i>
                                         </button>
@@ -195,7 +201,7 @@ $dataBook = $showBook->showBook();
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6">Empty Books</td>
+                            <td colspan="7">Empty Books</td>
                         </tr>
                     <?php endif; ?>
                 <?php endif; // END CONDITION ?> 

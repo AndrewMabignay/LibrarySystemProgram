@@ -43,7 +43,7 @@ if (isset($_POST['returnBook'])) {
     $returnTime = $_POST['time'];
 
     $studentBorrowedBook = new Model();
-    $studentBorrowedBook->addReturnBook($borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime);
+    $studentBorrowedBook->addReturnBook($borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime, $bookID);
     $dataBorrowedBook = $studentBorrowedBook->showBorrowedBookForReturn($studentNumber);
 }
 

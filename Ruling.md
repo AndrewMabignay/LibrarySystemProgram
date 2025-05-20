@@ -45,3 +45,4 @@ REQUIREMENTS :
 
 NOTES :
 - User will only login when the account is active.
+- When the Student/User has remaining borrowed books, it is invalid to Inactive to that student/user.

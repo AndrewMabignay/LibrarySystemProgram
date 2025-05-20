@@ -22,7 +22,7 @@
 }
 
 .container :where(.returning-list-container) :where(.table-wrapper) {
-    max-height: 350px;
+    max-height: 450px;
     padding: 0px 40px; 
     overflow-y: auto;
     overflow-x: hidden;

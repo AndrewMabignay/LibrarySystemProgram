@@ -22,6 +22,15 @@ DESC books;
 +-----------+--------------+------+-----+---------+----------------+
 6 rows in set (0.01 sec)
 
+CREATE TABLE books(
+    BookID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(255) NOT NULL,
+    Author VARCHAR(255) NOT NULL,
+    ISBN VARCHAR(100) NOT NULL,
+    Category VARCHAR(100) NOT NULL,
+    CopyRight YEAR NOT NULL
+);
+
 DESC borrowings;
 +------------+------+------+-----+---------+----------------+
 | Field      | Type | Null | Key | Default | Extra          |
@@ -33,6 +42,14 @@ DESC borrowings;
 | BorrowTime | time | YES  |     | NULL    |                |
 +------------+------+------+-----+---------+----------------+
 5 rows in set (0.01 sec)
+
+CREATE TABLE borrowings(
+    BorrowID INT PRIMARY KEY AUTO_INCREMENT,
+    BookID INT NOT NULL,
+    UserID INT NOT NULL,
+    BorrowDate DATE NOT NULL,
+    BorrowTime TIME NOT NULL
+);
 
 DESC returning;
 +------------+------+------+-----+---------+----------------+
@@ -48,6 +65,16 @@ DESC returning;
 +------------+------+------+-----+---------+----------------+
 7 rows in set (0.01 sec)
 
+CREATE TABLE `returning` (
+    ReturnID INT PRIMARY KEY AUTO_INCREMENT,
+    BorrowID INT NOT NULL,
+    UserID INT NOT NULL,
+    BorrowDate DATE NOT NULL,
+    BorrowTime TIME NOT NULL,
+    ReturnDate DATE NOT NULL,
+    ReturnTime TIME NOT NULL
+);
+
 DESC user;
 +----------+-------------------------------------+------+-----+---------+----------------+
 | Field    | Type                                | Null | Key | Default | Extra          |
@@ -58,7 +85,16 @@ DESC user;
 | Role     | enum('Admin','Student','Librarian') | NO   |     | NULL    |                |
 | Status   | enum('Active','Inactive')           | NO   |     | Active  |                |
 +----------+-------------------------------------+------+-----+---------+----------------+
-5 rows in set (0.00 sec)
+
+CREATE TABLE user(
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(100) NOT NULL,
+    Password VARCHAR(100) NOT NULL,
+    Role ENUM('Admin', 'Student', 'Librarian') NOT NULL,
+    Status ENUM('Active', 'Inactive') DEFAULT 'Active' 
+);
+
+INSERT INTO user(Username, Password, Role, Status) VALUES('admin', 'admin', 'Admin', 'Active');
 
 DESC students;
 +-------------+---------------------------+------+-----+---------+-------+
@@ -71,7 +107,16 @@ DESC students;
 | YearLevel   | varchar(20)               | NO   |     | NULL    |       |
 | Status      | enum('Active','Inactive') | NO   |     | NULL    |       |
 +-------------+---------------------------+------+-----+---------+-------+
-6 rows in set (0.01 sec)
+
+CREATE TABLE students(
+    StudentID VARCHAR(20) PRIMARY KEY,
+    StudentName VARCHAR(100) NOT NULL,
+    Course VARCHAR(20) NOT NULL,
+    Major VARCHAR(100) NOT NULL,
+    YearLevel VARCHAR(20) NOT NULL,
+    Status ENUM('Active', 'Inactive') NOT NULL
+);
+
 
 SHOW PROCEDURE STATUS WHERE Db = DATABASE();
 +---------------+---------+-----------+----------------+---------------------+---------------------+---------------+---------+----------------------+----------------------+--------------------+

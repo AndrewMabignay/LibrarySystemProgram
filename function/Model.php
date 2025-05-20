@@ -375,6 +375,12 @@ class Model {
         $this->query = "INSERT INTO borrowings(BookID, UserID, BorrowDate, BorrowTime) VALUES (?, ?, ?, ?)";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('iiss', $bookID, $userID, $date, $time);
+        $statement->execute();
+
+        // UPDATE STATUS BOOKS.
+        $this->query = "UPDATE books SET Status = 'Borrowed' WHERE BookID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $bookID);
 
         return $statement->execute() ? 'Successfully Borrowed Book' : 'Not Successfully Borrowed Book';
     }
@@ -421,12 +427,12 @@ class Model {
 
 
     // 5. ============================ RETURNING ============================ 
-    public function addReturnBook($borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime) {
+    public function addReturnBook($borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime, $bookID) {
         global $conn;
 
-        $this->query = "INSERT INTO returning(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime) VALUES (?, ?, ?, ?, ?, ?)";
+        $this->query = "INSERT INTO `returning`(BorrowID, UserID, BorrowDate, BorrowTime, ReturnDate, ReturnTime, BookID) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $statement = $conn->prepare($this->query);
-        $statement->bind_param('iissss', $borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime);
+        $statement->bind_param('iissssi', $borrowID, $userID, $borrowDate, $borrowTime, $returnDate, $returnTime, $bookID);
         $statement->execute();
    
         $this->query = "DELETE FROM borrowings WHERE BorrowID = ?";

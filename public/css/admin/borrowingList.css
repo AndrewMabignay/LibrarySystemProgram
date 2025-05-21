@@ -226,39 +226,35 @@
 
 .container :where(.borrowing-list-container) :where(.table-wrapper) :where(table) :where(thead, tbody) :where(tr) :where(td) :where(form) {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 8px;
+
+    button {
+        height: 30px;
+        width: 100px;
+
+        color: var(--text-color-primary);
+        padding: 10px 15px;
+        font-size: 12px;
+
+        border: none;
+        border-radius: 6px;
+
+        cursor: pointer;    
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }
 
-#penaltyNo {
-    padding: 5px 25px;
-    background: #007F67;
-    color: var(--text-color-primary);
-
-    border: none;
-    border-radius: 30px;
-}
-
-#penaltyYes {
-    padding: 5px 25px;
-    background: #B34747;
-    color: var(--text-color-primary);
-
-    border: none;
-    border-radius: 30px; 
-}
-
-#returned {
+#add_to_list, #borrowed {
     background: var(--color-accent-primary);
-    color: var(--text-color-primary);
-    padding: 10px 15px;
+}
 
-    border: none;
-    border-radius: 6px;
-
-    cursor: pointer;
+#removed {
+    background: #6E1F1F;
 }
 
 #returned:hover {

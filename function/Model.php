@@ -417,6 +417,21 @@ class Model {
         return $rows;
     }
 
+    public function deleteAddToList($userID, $bookID) {
+        global $conn;
+
+        $this->query = "DELETE FROM add_to_list WHERE BookID = ? AND UserID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('ii', $bookID, $userID);
+        $statement->execute();
+
+        $this->query = "UPDATE books SET Status = 'Available' WHERE BookID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $bookID);
+
+        return $statement->execute() ? 'Successfully Deleted Book' : 'Not Successfully Deleted Book'; 
+    }
+
     public function addBorrowBook($bookID, $userID, $date, $time) {
         global $conn;
 
@@ -429,6 +444,12 @@ class Model {
         $this->query = "INSERT INTO borrowings(BookID, UserID, BorrowDate, BorrowTime) VALUES (?, ?, ?, ?)";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('iiss', $bookID, $userID, $date, $time);
+        $statement->execute();
+
+        // DELETE ADD_TO_LIST BASED ON USER ID AND BOOK ID
+        $this->query = "DELETE FROM add_to_list WHERE BookID = ? AND UserID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('ii', $bookID, $userID);
         $statement->execute();
 
         // UPDATE STATUS BOOKS.
@@ -492,6 +513,12 @@ class Model {
         $this->query = "DELETE FROM borrowings WHERE BorrowID = ?";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('i', $borrowID);
+        $statement->execute();
+
+        // UPDATE STATUS BOOKS.
+        $this->query = "UPDATE books SET Status = 'Available' WHERE BookID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $bookID);
 
         return $statement->execute() ? 'Successfully Returned Book' : 'Not Successfully Returned Book';
     }
@@ -573,7 +600,7 @@ class Model {
     public function inventoryBookCategory() {
         global $conn;
 
-        $this->query = "SELECT COUNT(*) AS 'Quantity' FROM books GROUP BY Category";
+        $this->query = "SELECT Category, COUNT(*) AS 'Quantity' FROM books GROUP BY Category";
         $statement = $conn->prepare($this->query);
         $statement->execute();
         $result = $statement->get_result();
@@ -589,5 +616,82 @@ class Model {
         return $rows;
     }
 
-    public function inventoryArchieveBook() {}
+    public function inventoryArchivedBooks() {
+        global $conn;
+
+        $this->query = "SELECT * FROM books WHERE CopyRight <= YEAR(CURDATE()) - 6";
+        $statement = $conn->prepare($this->query);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    public function searchAllBooks($input) {
+        global $conn;
+
+        $this->query = "SELECT * FROM books WHERE Title = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    public function searchBookCategory($input) {
+        global $conn;
+
+        $this->query = "SELECT Category, COUNT(*) AS Quantity FROM books WHERE Category = ? GROUP BY Category";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;       
+    }
+
+    public function searchArchivedBooks($input) {
+        global $conn;
+
+        $this->query = "SELECT * FROM books WHERE CopyRight <= YEAR(CURDATE()) - 6 AND Title = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;       
+    }
 }

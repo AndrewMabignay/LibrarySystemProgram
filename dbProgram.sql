@@ -173,3 +173,19 @@ GROUP BY r.BookID;
 
 -- INVENTORY GROUP BY
 SELECT COUNT(*) AS 'Quantity' FROM books GROUP BY Category
+
+SELECT b.*
+FROM books b
+JOIN add_to_list a ON b.BookID = a.BookID
+WHERE a.UserID = 8 AND Status = 'Reserved';
+
+SELECT b.*, a.UserID
+FROM books b
+JOIN add_to_list a ON b.BookID = a.BookID
+WHERE a.UserID = 8 AND b.Status = 'Reserved';
+
+DELETE FROM add_to_list WHERE BookID = ? AND UserID = ?;
+
+SELECT Category, COUNT(*) AS Quantity
+FROM books
+WHERE Category = 'History';

@@ -42,7 +42,7 @@ if (isset($_POST['addToListBook'])) {
     $major = $_POST['major'];
     $yearLevel = $_POST['yearLevel'];
 
-    // BORROWING FIELDS
+    // ADD TO LIST FIELDS
     $bookID = $_POST['bookID'];
     $userID = $_POST['userID'];
 
@@ -76,9 +76,59 @@ if (isset($_POST['addToListBook'])) {
     $displayAddToList = $showAddToList->showAddToList($studentIDDisplay);
 }
 
+if (isset($_POST['deleteAddtoListBook'])) {
+    // STUDENT #
+    $studentNumber = $_POST['studentNumber'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+
+    $bookID = $_POST['bookID'];
+    $userID = $_POST['userID'];
+
+    $borrowBook = new Model();
+    $borrowBookPrompt = $borrowBook->deleteAddToList($userID, $bookID);    
+    // echo $borrowBookPrompt;
+
+    $studentIDDisplay = $studentNumber;
+    $studentIDUserDisplay = $studentIDDisplay;
+
+    $searchStudentID = new Model();
+    $studentInformation = $searchStudentID->searchStudentBorrowBook($studentIDDisplay);
+
+    if (count($studentInformation) == 0) {
+        $studentIDDisplay = '';
+    } 
+
+    $studentNameDisplay = '';
+    $courseDisplay = '';
+    $majorDisplay = '';
+    $yearLevelDisplay = '';
+
+    foreach ($studentInformation as $data) {
+        $studentNameDisplay = $data['StudentName'];
+        $courseDisplay = $data['Course'];
+        $majorDisplay = $data['Major'];
+        $yearLevelDisplay = $data['YearLevel'];
+    }
+
+    $showAddToList = new Model();
+    $displayAddToList = $showAddToList->showAddToList($studentIDDisplay);
+}
+
 
 // ================ BORROW BOOK ================
 if (isset($_POST['borrowBook'])) {
+    // STUDENT #
+    $studentNumber = $_POST['studentNumber'];
+    $date = $_POST['date'];
+    $time = $_POST['time'];
+    
+    // STUDENT INFORMATION
+    $studentName = $_POST['studentName'];
+    $course = $_POST['course'];
+    $major = $_POST['major'];
+    $yearLevel = $_POST['yearLevel'];
+
     // STUDENT #
     $date = $_POST['date'];
     $time = $_POST['time'];
@@ -89,6 +139,30 @@ if (isset($_POST['borrowBook'])) {
     $borrowBook = new Model();
     $borrowBookPrompt = $borrowBook->addBorrowBook($bookID, $userID, $date, $time);    
     echo $borrowBookPrompt;
+
+    $studentIDDisplay = $studentNumber;
+    $studentIDUserDisplay = $studentIDDisplay;
+
+    $searchStudentID = new Model();
+    $studentInformation = $searchStudentID->searchStudentBorrowBook($studentIDDisplay);
+
+    if (count($studentInformation) == 0) {
+        $studentIDDisplay = '';
+    } 
+
+    $studentNameDisplay = '';
+    $courseDisplay = '';
+    $majorDisplay = '';
+    $yearLevelDisplay = '';
+
+    foreach ($studentInformation as $data) {
+        $studentNameDisplay = $data['StudentName'];
+        $courseDisplay = $data['Course'];
+        $majorDisplay = $data['Major'];
+        $yearLevelDisplay = $data['YearLevel'];
+    }
+
+    $displayAddToList = $searchStudentID->showAddToList($studentIDDisplay);
 } 
 
 
@@ -181,11 +255,6 @@ $dataBook = $showBook->showAvailableBorrowBook();
 
                 <hr class="seperator-line-table">
 
-                <!-- SEARCH BOOKS -->
-                <div class="search-books-information">
-                    
-                </div>
-
                 <!-- BOOK TABLE [ADD-TO-LIST] -->
                 <table>
                     <thead>
@@ -222,12 +291,8 @@ $dataBook = $showBook->showAvailableBorrowBook();
                                         <input type="hidden" name="major" value="<?php echo isset($majorDisplay) ? $majorDisplay : '' ?>">
                                         <input type="hidden" name="yearLevel" value="<?php echo isset($yearLevelDisplay) ? $yearLevelDisplay : '' ?>">
 
-                                        <button type="submit" name="borrowBook">
-                                            Borrow
-                                        </button>
-
-                                        <button type="submit" name="addToListBook">
-                                            Add to List
+                                        <button type="submit" name="addToListBook" id="add_to_list">
+                                            Add
                                         </button>
                                     </form>
                                 </td>
@@ -237,21 +302,23 @@ $dataBook = $showBook->showAvailableBorrowBook();
                     </tbody>
                 </table>
 
-                <!-- BOOK TABLE [BORROWING] -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Book ID</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>ISBN</th>
-                            <th>Category</th>
-                            <th>Copyright</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (isset($displayAddToList)): ?>
+                <?php if (isset($displayAddToList)): ?>
+                    <hr class="seperator-line-table">
+
+                    <!-- BOOK TABLE [BORROWING] -->
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Book ID</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>ISBN</th>
+                                <th>Category</th>
+                                <th>Copyright</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php foreach ($displayAddToList as $addToList): ?>
                                 <tr>
                                     <td><?php echo $addToList['BookID'] ?></td>
@@ -267,21 +334,28 @@ $dataBook = $showBook->showAvailableBorrowBook();
                                             <input type="hidden" name="date" value="<?php echo date("Y-m-d") ?>">
                                             <input type="hidden" name="time" value="<?php echo date("H:i:s") ?>">
 
-                                            <button type="submit" name="borrowBook">
+                                            <input type="hidden" name="studentNumber" value="<?php echo isset($studentIDUserDisplay) ? $studentIDUserDisplay : '' ?>">
+                                            <input type="hidden" name="studentName" value="<?php echo isset($studentNameDisplay) ? $studentNameDisplay : '' ?>">
+                                            <input type="hidden" name="course" value="<?php echo isset($courseDisplay) ? $courseDisplay : '' ?>">
+                                            <input type="hidden" name="major" value="<?php echo isset($majorDisplay) ? $majorDisplay : '' ?>">
+                                            <input type="hidden" name="yearLevel" value="<?php echo isset($yearLevelDisplay) ? $yearLevelDisplay : '' ?>">
+
+                                            <button type="submit" name="borrowBook" id="borrowed">
                                                 Borrow
+                                            </button>
+
+                                            <button type="submit" name="deleteAddtoListBook" id="removed">
+                                                Delete
                                             </button>
                                         </form>
                                     </td>
                                 </tr>
 
                             <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </div>
-
-
-
         </div>
     </div>
 

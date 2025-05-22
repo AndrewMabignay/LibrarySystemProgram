@@ -382,6 +382,26 @@ class Model {
     }
 
     // 4. ============================ BORROWING ============================   
+    public function searchAvailableBook($input) {
+        global $conn;
+
+        $this->query = "SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL AND Status = 'Available' AND CopyRight >= YEAR(CURDATE()) - 6 AND Title = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+    
     public function addToList($studentNumber, $studentName, $course, $major, $yearLevel, $bookID, $userID, $date, $time) {
         global $conn;
 

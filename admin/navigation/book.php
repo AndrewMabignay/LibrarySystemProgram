@@ -215,7 +215,7 @@ $dataBook = $showBook->showBook();
         <div class="add-book-container">
             <form action="admin.php?page=book" method="POST" class="add-book-function">
                 <div class="close-container">
-                    <h2>Add Candidate</h2>
+                    <h2>Add Book</h2>
 
                     <button type="submit" name="close">
                         <i class="fa fa-times"></i>

@@ -30,6 +30,10 @@ if (isset($_POST['closeAdd'])) {
     unset($addVerify);
 }
 
+if (isset($_POST['closeEdit'])) {
+    unset($editVerify);
+}
+
 // ------------ SEARCH STUDENT ------------  
 if (isset($_POST['searchStudent'])) {
     $searchStudentID = $_POST['searchStudentNumber'];
@@ -172,14 +176,14 @@ $dataStudents = $showStudents->showStudent();
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="6" style="text-align: center;">No student found.</td>
+                            <td colspan="7" style="text-align: center;">No student found.</td>
                         </tr>
                     <?php endif; ?>
 
                 <!-- SECOND CONDITION -->
                 <?php elseif (isset($resultStudentOutput) && $searchStudentID == ''): ?>
                     <tr>
-                        <td colspan="6" style="text-align: center;">No student found.</td>
+                        <td colspan="7" style="text-align: center;">No student found.</td>
                     </tr>
 
                 <!-- THIRD CONDITION -->
@@ -335,61 +339,90 @@ $dataStudents = $showStudents->showStudent();
         <div class="overlay"></div>
         <!-- EDIT STUDENT FORM -->
         <form action="admin.php?page=studentList" method="POST" class="edit-container">
+            <h2>
+                <i class="fas fa-user-graduate"></i>
+                Edit Student
+            </h2>
+
             <input type="hidden" name="currentStudentNo" value="<?php echo isset($studentIDEdit) ? $studentIDEdit : '' ?>">    
 
-            <!-- STUDENT NUMBER CONTAINER -->
-            <div class="input-container">
-                <label for="studentNo">Student #</label>
-                <input type="text" id="studentNo" name="studentNo" value="<?php echo isset($studentIDEdit) ? $studentIDEdit : '' ?>">
+            <div class="grid-container">
+                <!-- STUDENT NUMBER CONTAINER -->
+                <div class="input-container">
+                    <label for="studentNo">Student #</label>
+                    <input type="text" id="studentNo" name="studentNo" value="<?php echo isset($studentIDEdit) ? $studentIDEdit : '' ?>">
+                </div>
+
+                <!-- STUDENT NAME CONTAINER -->
+                <div class="input-container">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentNo" name="studentName" value="<?php echo isset($studentNameEdit) ? $studentNameEdit : '' ?>">
+                </div>
+
+                <!-- COURSE CONTAINER -->
+                <div class="input-container">
+                    <label for="studentCourse">Course</label>
+                    <input type="text" id="studentCourse" name="studentCourse" value="<?php echo isset($studentCourseEdit) ? $studentCourseEdit : '' ?>">
+                </div>
+
+                <!-- MAJOR CONTAINER -->
+                <div class="input-container">
+                    <label for="studentMajor">Major</label>
+                    <input type="text" id="studentMajor" name="studentMajor" value="<?php echo isset($studentMajorEdit) ? $studentMajorEdit : '' ?>">
+                </div>
+
+                <!-- YEAR LEVEL CONTAINER -->
+                <div class="input-container">
+                    <label for="studentYearLevel">Year Level</label>
+                    <input type="text" id="studentYearLevel" name="studentYearLevel" value="<?php echo isset($studentYearLevelEdit) ? $studentYearLevelEdit : '' ?>">
+                </div>
+
+                <!-- STATUS CONTAINER -->
+                <div class="input-container">
+                    <label for="studentStatus">Status</label>
+                    <select name="studentStatus" id="studentStatus">
+                        <option value="Active" <?php echo isset($studentStatusEdit) && $studentStatusEdit == 'Active' ? 'selected' : '' ?>>Active</option>
+                        <option value="Inactive" <?php echo isset($studentStatusEdit) && $studentStatusEdit == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
+                    </select>
+                </div>
+
+                <!-- PASSWORD CONTAINER -->
+                <div class="input-container">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" value="<?php echo isset($updateStudentPassword) ? $updateStudentPassword : '' ?>">
+                </div>
+
+                <!-- VERIFY PASSWORD CONTAINER -->
+                <div class="input-container">
+                    <label for="verifyPassword">Verify Password</label>
+                    <input type="password" id="verifyPassword" name="verifyPassword" value="<?php echo isset($updateStudentPasswordVerify) ? $updateStudentPasswordVerify : '' ?>">
+                </div>
             </div>
 
-            <!-- STUDENT NAME CONTAINER -->
-            <div class="input-container">
-                <label for="studentName">Student Name</label>
-                <input type="text" id="studentNo" name="studentName" value="<?php echo isset($studentNameEdit) ? $studentNameEdit : '' ?>">
-            </div>
+            <?php if (isset($updatePrompt)): ?>
+                <div class="alert-form">
+                    <?php if ($updatePrompt == 'Successfully Password Updated' || $updatePrompt == 'Successfully Updated'): ?>
+                        <p style="color: green"><?php echo $updatePrompt; ?></p>
+                    <?php elseif ($updatePrompt == 'No changes made.' || $updatePrompt == 'No password changes made.'): ?>
+                        <p style="color: #222831"><?php echo $updatePrompt; ?></p>
+                    <?php else: ?>
+                        <p><?php echo $updatePrompt; ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <p></p>
+            <?php endif; ?>
 
-            <!-- COURSE CONTAINER -->
-            <div class="input-container">
-                <label for="studentCourse">Course</label>
-                <input type="text" id="studentCourse" name="studentCourse" value="<?php echo isset($studentCourseEdit) ? $studentCourseEdit : '' ?>">
-            </div>
-
-            <!-- MAJOR CONTAINER -->
-            <div class="input-container">
-                <label for="studentMajor">Major</label>
-                <input type="text" id="studentMajor" name="studentMajor" value="<?php echo isset($studentMajorEdit) ? $studentMajorEdit : '' ?>">
-            </div>
-
-            <!-- YEAR LEVEL CONTAINER -->
-            <div class="input-container">
-                <label for="studentYearLevel">Year Level</label>
-                <input type="text" id="studentYearLevel" name="studentYearLevel" value="<?php echo isset($studentYearLevelEdit) ? $studentYearLevelEdit : '' ?>">
-            </div>
-
-            <!-- STATUS CONTAINER -->
-            <div class="input-container">
-                <label for="studentStatus">Status</label>
-                <select name="studentStatus" id="studentStatus">
-                    <option value="Active" <?php echo isset($studentStatusEdit) && $studentStatusEdit == 'Active' ? 'selected' : '' ?>>Active</option>
-                    <option value="Inactive" <?php echo isset($studentStatusEdit) && $studentStatusEdit == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
-                </select>
-            </div>
-
-
-            <!-- PASSWORD CONTAINER -->
-            <div class="input-container">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" value="<?php echo isset($updateStudentPassword) ? $updateStudentPassword : '' ?>">
-            </div>
-
-            <!-- VERIFY PASSWORD CONTAINER -->
-            <div class="input-container">
-                <label for="verifyPassword">Verify Password</label>
-                <input type="password" id="verifyPassword" name="verifyPassword" value="<?php echo isset($updateStudentPasswordVerify) ? $updateStudentPasswordVerify : '' ?>">
-            </div>
-
-            <button type="submit" name="updateStudent">UPDATE</button>
+            <div class="button-container">
+                <button type="submit" name="closeEdit" class="back">
+                    <i class="fas fa-arrow-left"></i> 
+                    BACK
+                </button>
+                <button type="submit" name="updateStudent" class="save">
+                    <i class="fas fa-sync-alt"></i>
+                    UPDATE
+                </button>
+            </div>      
         </form>
     <?php endif; ?>
     </div>

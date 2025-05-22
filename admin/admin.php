@@ -45,6 +45,10 @@ else if (isset($_POST['dashboard']) || $page == 'dashboard') {
     ob_start();
     include('navigation/studentList.php');
     $content = ob_get_clean();
+} else if (isset($_POST['userManagement']) || $page == 'userManagement') {
+    ob_start();
+    include('navigation/userManagement.php');
+    $content = ob_get_clean();
 } 
 
 
@@ -92,6 +96,9 @@ else if (isset($_POST['dashboard']) || $page == 'dashboard') {
                 </button>
                 <button type="submit" name="page" value="inventoryStatus">
                     <i class="fas fa-chart-line"></i> Inventory Status
+                </button>
+                <button type="submit" name="page" value="userManagement">
+                    <i class="fas fa-users"></i> User Management
                 </button>
             </form>
 

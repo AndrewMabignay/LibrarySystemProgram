@@ -3,8 +3,8 @@
 require_once '../function/Model.php';
 
 // ------------  ADD STUDENT ------------ 
-if (isset($_POST['addStudentVerify'])) {
-    $addVerify = true;    
+if (isset($_POST['addUserVerify'])) {
+    $addUserVerify = true;    
 }
 
 
@@ -40,15 +40,14 @@ if (isset($_POST['searchStudent'])) {
 
 
 // ------------ EDIT STUDENT ------------
-if (isset($_POST['editStudentVerify'])) {
-    $studentIDEdit = $_POST['studentIdEdit'];
-    $studentNameEdit = $_POST['studentNameEdit'];
-    $studentCourseEdit = $_POST['studentCourseEdit'];
-    $studentMajorEdit = $_POST['studentMajorEdit'];
-    $studentYearLevelEdit = $_POST['studentYearLevelEdit'];
-    $studentStatusEdit = $_POST['studentStatusEdit'];
+if (isset($_POST['editUserVerify'])) {
+    $userIDEdit = $_POST['usernameEdit'];
+    $userUsernameEdit = $_POST['passwordEdit'];
+    $userPasswordEdit = $_POST['studentCourseEdit'];
+    $userRoleEdit = $_POST['roleEdit'];
+    $userStatusEdit = $_POST['statusEdit'];
 
-    $editVerify = true;
+    $editUserVerify = true;
 }
 
 if (isset($_POST['updateStudent'])) {
@@ -92,14 +91,14 @@ if (isset($_POST['refresh'])) {
 }
 
 // ------------ SHOW STUDENT ------------
-$showStudents = new Model();
-$dataStudents = $showStudents->showStudent();
+$showUserManagement = new Model();
+$dataUsers = $showUserManagement->showUserManagement();
 
 ?>
 
 <div class="student-container">
     <form action="admin.php?page=studentList" method="POST" class="student-container-form">
-        <h2>List of Students</h2>    
+        <h2>User Management</h2>    
 
         <div class="input-container">
             
@@ -114,12 +113,12 @@ $dataStudents = $showStudents->showStudent();
             </div>
 
             <!-- REFRESH BUTTON -->
-            <button type="submit" name="refreshStudent">
+            <button type="submit" name="refreshUser">
                 <i class="fas fa-sync"></i>
             </button>
 
             <!-- ADD BUTTON -->
-            <button type="submit" name="addStudentVerify">
+            <button type="submit" name="addUserVerify">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -133,176 +132,75 @@ $dataStudents = $showStudents->showStudent();
         <table>
             <thead>
                 <tr>
-                    <th>Student #</th>
-                    <th>Name</th>
-                    <th>Course</th>
-                    <th>Major</th>
-                    <th>Year Level</th>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- FIRST CONDITION -->
-                <?php if (isset($searchStudentID) && $searchStudentID != ''): ?>
-                    <?php if (isset($resultStudentOutput) && count($resultStudentOutput)): ?>
-                        <?php foreach ($resultStudentOutput as $students): ?>
-                            <tr>
-                                <td><?php echo $students['StudentID'] ?></td>
-                                <td><?php echo $students['StudentName'] ?></td>
-                                <td><?php echo $students['Course'] ?></td>
-                                <td><?php echo $students['Major'] ?></td>
-                                <td><?php echo $students['YearLevel'] ?></td>
-                                <td><?php echo $students['Status'] ?></td>
-                                <td>
-                                    <form action="admin.php?page=studentList" method="POST">
-                                        <input type="hidden" name="studentIdEdit" value="<?php echo $students['StudentID'] ?>">
-                                        <input type="hidden" name="studentNameEdit" value="<?php echo $students['StudentName'] ?>">
-                                        <input type="hidden" name="studentCourseEdit" value="<?php echo $students['Course'] ?>">
-                                        <input type="hidden" name="studentMajorEdit" value="<?php echo $students['Major'] ?>">
-                                        <input type="hidden" name="studentYearLevelEdit" value="<?php echo $students['YearLevel'] ?>">
-                                        <input type="hidden" name="studentStatusEdit" value="<?php echo $students['Status'] ?>">
-                                    
-                                        <button type="submit" name="editStudentVerify">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                <?php if (isset($refreshTable) && $refreshTable == true): ?>        
+                    <?php foreach ($dataUsers as $users): ?>
                         <tr>
-                            <td colspan="6" style="text-align: center;">No student found.</td>
-                        </tr>
-                    <?php endif; ?>
-
-                <!-- SECOND CONDITION -->
-                <?php elseif (isset($resultStudentOutput) && $searchStudentID == ''): ?>
-                    <tr>
-                        <td colspan="6" style="text-align: center;">No student found.</td>
-                    </tr>
-
-                <!-- THIRD CONDITION -->
-                <?php elseif (isset($refreshTable) && $refreshTable == true): ?>
-                    <?php foreach($dataStudents as $students): ?>
-                        <tr>
-                            <td><?php echo $students['StudentID'] ?></td>
-                            <td><?php echo $students['StudentName'] ?></td>
-                            <td><?php echo $students['Course'] ?></td>
-                            <td><?php echo $students['Major'] ?></td>
-                            <td><?php echo $students['YearLevel'] ?></td>
-                            <td><?php echo $students['Status'] ?></td>
+                            <td><?php echo $users['ID'] ?></td>
+                            <td><?php echo $users['Username'] ?></td>
+                            <td><?php echo $users['Role'] ?></td>
+                            <td><?php echo $users['Status'] ?></td>
                             <td>
-                                <form action="admin.php?page=studentList" method="POST">
-                                    <input type="hidden" name="studentIdEdit" value="<?php echo $students['StudentID'] ?>">
-                                    <input type="hidden" name="studentNameEdit" value="<?php echo $students['StudentName'] ?>">
-                                    <input type="hidden" name="studentCourseEdit" value="<?php echo $students['Course'] ?>">
-                                    <input type="hidden" name="studentMajorEdit" value="<?php echo $students['Major'] ?>">
-                                    <input type="hidden" name="studentYearLevelEdit" value="<?php echo $students['YearLevel'] ?>">
-                                    <input type="hidden" name="studentStatusEdit" value="<?php echo $students['Status'] ?>">
+                                <form action="admin.php?page=userManagement" method="POST">
+                                    <input type="hidden" name="usernameEdit" value="<?php echo $users['Username'] ?>">
+                                    <input type="hidden" name="passwordEdit" value="<?php echo $users['Role'] ?>">
+                                    <input type="hidden" name="roleEdit" value="<?php echo $users['Role'] ?>">
+                                    <input type="hidden" name="statusEdit" value="<?php echo $users['Status'] ?>">
                                 
-                                    <button type="submit" name="editStudentVerify">
+                                    <button type="submit" name="editUserVerify">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
-
-                <!-- LAST CONDITION -->
                 <?php else: ?>
-                    <?php foreach($dataStudents as $students): ?>
+                    <?php foreach ($dataUsers as $users): ?>
                         <tr>
-                            <td><?php echo $students['StudentID'] ?></td>
-                            <td><?php echo $students['StudentName'] ?></td>
-                            <td><?php echo $students['Course'] ?></td>
-                            <td><?php echo $students['Major'] ?></td>
-                            <td><?php echo $students['YearLevel'] ?></td>
-                            <td><?php echo $students['Status'] ?></td>
+                            <td><?php echo $users['ID'] ?></td>
+                            <td><?php echo $users['Username'] ?></td>
+                            <td><?php echo $users['Role'] ?></td>
+                            <td><?php echo $users['Status'] ?></td>
                             <td>
-                                <form action="admin.php?page=studentList" method="POST">
-                                    <input type="hidden" name="studentIdEdit" value="<?php echo $students['StudentID'] ?>">
-                                    <input type="hidden" name="studentNameEdit" value="<?php echo $students['StudentName'] ?>">
-                                    <input type="hidden" name="studentCourseEdit" value="<?php echo $students['Course'] ?>">
-                                    <input type="hidden" name="studentMajorEdit" value="<?php echo $students['Major'] ?>">
-                                    <input type="hidden" name="studentYearLevelEdit" value="<?php echo $students['YearLevel'] ?>">
-                                    <input type="hidden" name="studentStatusEdit" value="<?php echo $students['Status'] ?>">
+                                <form action="admin.php?page=userManagement" method="POST">
+                                    <input type="hidden" name="usernameEdit" value="<?php echo $users['Username'] ?>">
+                                    <input type="hidden" name="passwordEdit" value="<?php echo $users['Role'] ?>">
+                                    <input type="hidden" name="roleEdit" value="<?php echo $users['Role'] ?>">
+                                    <input type="hidden" name="statusEdit" value="<?php echo $users['Status'] ?>">
                                 
-                                    <button type="submit" name="editStudentVerify">
+                                    <button type="submit" name="editUserVerify">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                 </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
-
-                <!-- END CONDITION -->
                 <?php endif; ?>
             </tbody>
         </table>
     </div>
 
     <!-- VIEW ADD FORM -->
-    <?php if(isset($addVerify) && $addVerify == true): ?>
+    <?php if(isset($addUserVerify) && $addUserVerify == true): ?>
         <div class="overlay"></div>
         <!-- ADD STUDENT FORM -->
         <form action="admin.php?page=studentList" method="POST" class="add-container">
             <h2>
                 <i class="fas fa-user-graduate"></i>
-                Add Student
+                Add User
             </h2>
 
             <div class="grid-container">
-                <!-- STUDENT NUMBER CONTAINER -->
-                <div class="input-container">
-                    <label for="studentNo">Student #</label>
-                    <input type="text" id="studentNo" name="studentNo" value="<?php  ?>">
-                </div>
+                
 
-                <!-- STUDENT NAME CONTAINER -->
-                <div class="input-container">
-                    <label for="studentName">Student Name</label>
-                    <input type="text" id="studentNo" name="studentName" value="<?php  ?>">
-                </div>
-
-                <!-- COURSE CONTAINER -->
-                <div class="input-container">
-                    <label for="studentCourse">Course</label>
-                    <input type="text" id="studentCourse" name="studentCourse" value="<?php  ?>">
-                </div>
-
-                <!-- MAJOR CONTAINER -->
-                <div class="input-container">
-                    <label for="studentMajor">Major</label>
-                    <input type="text" id="studentMajor" name="studentMajor" value="<?php  ?>">
-                </div>
-
-                <!-- YEAR LEVEL CONTAINER -->
-                <div class="input-container">
-                    <label for="studentYearLevel">Year Level</label>
-                    <input type="text" id="studentYearLevel" name="studentYearLevel" value="<?php  ?>">
-                </div>
-
-                <!-- STATUS CONTAINER -->
-                <div class="input-container">
-                    <label for="studentStatus">Status</label>
-                    <select name="studentStatus" id="studentStatus">
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                </div>
-
-                <!-- PASSWORD CONTAINER -->
-                <div class="input-container">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" value="">
-                </div>
-
-                <!-- VERIFY PASSWORD CONTAINER -->
-                <div class="input-container">
-                    <label for="verifyPassword">Verify Password</label>
-                    <input type="password" id="verifyPassword" name="verifyPassword" value="">
-                </div>
+                
             </div>
 
             <?php if (isset($addStudentPrompting)): ?>
@@ -331,7 +229,7 @@ $dataStudents = $showStudents->showStudent();
     <?php endif; ?>
 
     <!-- VIEW EDIT FORM -->
-    <?php if(isset($editVerify) && $editVerify == true): ?>
+    <?php if(isset($editUserVerify) && $editUserVerify == true): ?>
         <div class="overlay"></div>
         <!-- EDIT STUDENT FORM -->
         <form action="admin.php?page=studentList" method="POST" class="edit-container">

@@ -186,7 +186,14 @@ class Model {
 
         // UPDATE USER
         if (empty($password) && empty($verifyPassword)) {
-            return $statement->execute() ? 'Successfully Updated' : 'Not successfully Updated';
+            $success = $statement->execute();
+            if ($success && $statement->affected_rows > 0) {
+                return 'Successfully Updated';
+            } elseif ($success && $statement->affected_rows === 0) {
+                return 'No changes made.';
+            } else {
+                return 'Not successfully Updated';
+            }
         }
 
         if (empty($password) && !empty($verifyPassword)) {
@@ -201,7 +208,14 @@ class Model {
         $statement = $conn->prepare($this->query);
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $statement->bind_param('sss', $hashedPassword, $status, $studentNumber);
-        return $statement->execute() ? 'Successfully Password Updated' : 'Not successfully password Updated';  
+        $success = $statement->execute();
+        if ($success && $statement->affected_rows > 0) {
+            return 'Successfully Password Updated';
+        } elseif ($success && $statement->affected_rows === 0) {
+            return 'No password changes made.';
+        } else {
+            return 'Not successfully password Updated';
+        }
     }
 
     public function studentID($studentID) {
@@ -483,7 +497,7 @@ class Model {
     public function showAvailableBorrowBook() {
         global $conn;
 
-        $this->query = "SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL AND Status = 'Available'";
+        $this->query = "SELECT b.* FROM books b LEFT JOIN borrowings br ON b.BookID = br.bookID WHERE br.BookID IS NULL AND Status = 'Available' AND CopyRight >= YEAR(CURDATE()) - 6";
 
         $statement = $conn->prepare($this->query);
         $statement->execute();
@@ -681,6 +695,25 @@ class Model {
         $this->query = "SELECT * FROM books WHERE CopyRight <= YEAR(CURDATE()) - 6 AND Title = ?";
         $statement = $conn->prepare($this->query);
         $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;       
+    }
+
+    public function showUserManagement() {
+        global $conn;
+
+        $this->query = "SELECT * FROM user WHERE Role != 'Student'";
+        $statement = $conn->prepare($this->query);
         $statement->execute();
         $result = $statement->get_result();
 

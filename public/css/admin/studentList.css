@@ -348,13 +348,13 @@
     }
 } 
 
-.container :where(.student-container) :where(.add-container) :where(.grid-container) {
+.container :where(.student-container) :where(.edit-container) :where(.grid-container) {
     display: grid;
     grid-template-columns: repeat(2, 350px);
     gap: 20px;
 }
 
-.container :where(.student-container) :where(.add-container) :where(.button-container) {
+.container :where(.student-container) :where(.edit-container) :where(.button-container) {
     display: flex;
     justify-content: space-between;
 

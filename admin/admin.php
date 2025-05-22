@@ -65,6 +65,7 @@ else if (isset($_POST['dashboard']) || $page == 'dashboard') {
     <link rel="stylesheet" href="../public/css/general.css">
     <link rel="stylesheet" href="../public/css/admin/admin.css">
     <link rel="stylesheet" href="../public/css/admin/studentList.css">
+    <link rel="stylesheet" href="../public/css/admin/book.css">
     <link rel="stylesheet" href="../public/css/admin/borrowingList.css">
     <link rel="stylesheet" href="../public/css/admin/returningList.css">
     <link rel="stylesheet" href="../public/css/admin/inventoryList.css">

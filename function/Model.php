@@ -347,18 +347,38 @@ class Model {
     public function searchBook($input) {
         global $conn;
 
-        $this->query = "SELECT * FROM books WHERE BookID LIKE '%$input%' OR Title LIKE '%$input%' OR Author LIKE '%$input%' OR ISBN LIKE '%$input%' OR Category LIKE '%$input%' OR Copies LIKE '%$input%'";
-        $retrieve = \mysqli_query($conn, $this->query);
+        $this->query = "SELECT * FROM books WHERE Title = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
 
         $rows = [];
 
-        if ($retrieve && mysqli_num_rows($retrieve) > 0) {
-            while ($row = mysqli_fetch_assoc($retrieve)) {
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
                 $rows[] = $row;
             }
-        } 
+        }
 
         return $rows;
+    }
+
+    public function editBook($editBookID, $editTitle, $editAuthor, $editISBN, $editCategory, $editCopyright) {
+        global $conn;
+
+        $this->query = "UPDATE books SET Title = ?, Author = ?, ISBN = ?, Category = ?, CopyRight = ? WHERE BookID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('sssssi', $editTitle, $editAuthor, $editISBN, $editCategory, $editCopyright, $editBookID);
+
+        $success = $statement->execute();
+        if ($success && $statement->affected_rows > 0) {
+            return 'Successfully Updated';
+        } elseif ($success && $statement->affected_rows === 0) {
+            return 'No changes made.';
+        } else {
+            return 'Not successfully Updated';
+        }
     }
 
     // 4. ============================ BORROWING ============================   

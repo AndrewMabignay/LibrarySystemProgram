@@ -1,5 +1,7 @@
 <?php 
 
+require_once '../function/Model.php';
+
 if (isset($_POST['addBookVerify'])) {
     $addBookVerify = true;
 }
@@ -20,7 +22,7 @@ if (isset($_POST['addBook'])) {
     $addBookVerify = true;
 }
 
-if (isset($_POST['editBookVerifiy'])) {
+if (isset($_POST['editBookVerify'])) {
     $editBookVerify = true;
 
     $editBookID = $_POST['bookID'];
@@ -29,11 +31,28 @@ if (isset($_POST['editBookVerifiy'])) {
     $editISBN = $_POST['isbn'];
     $editCategory = $_POST['category'];
     $editCopyright = $_POST['copyright'];
-    $editCopies = $_POST['copies'];
 }
 
-if (isset($_POST['editBook'])) {
+if (isset($_POST['updateBook'])) {
+    $editBookID = $_POST['bookID'];
+    $editTitle = $_POST['bookTitle'];
+    $editAuthor = $_POST['bookAuthor'];
+    $editISBN = $_POST['bookISBN'];
+    $editCategory = $_POST['bookCategory'];
+    $editCopyright = $_POST['bookCopyright'];
     
+    $editBook = new Model();
+    $editBookPrompt = $editBook->editBook($editBookID, $editTitle, $editAuthor, $editISBN, $editCategory, $editCopyright);
+
+    $editBookVerify = true;
+}
+
+if (isset($_POST['closeAdd'])) {
+    unset($addBookVerify);
+}
+
+if (isset($_POST['closeEdit'])) {
+    unset($editBookVerify);
 }
 
 if (isset($_POST['search'])) {
@@ -66,7 +85,7 @@ $dataBook = $showBook->showBook();
             
             <!-- SEARCH INPUT -->
             <div class="search-container">
-                <input type="text" name="searchBook">
+                <input type="text" name="searchBook" placeholder="Search Title">
                 <button type="submit" name="search">
                     <label for="">
                         <i class="fas fa-search"></i>
@@ -122,7 +141,7 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
                                         <input type="hidden" value="<?php echo $books['CopyRight'] ?>" name="copyright">
-                                        <button type="submit" name="editBookVerify">
+                                        <button type="submit" name="editBookVerify" <?php echo $books['Status'] == 'Borrowed' || $books['Status'] == 'Reserved' ? 'disabled' : ''?>>
                                             <i class="fas fa-edit"></i>
                                         </button>
                                     </form>
@@ -160,7 +179,7 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
                                         <input type="hidden" value="<?php echo $books['CopyRight'] ?>" name="copyright">
-                                        <button type="submit" name="edit">
+                                        <button type="submit" name="editBookVerify" <?php echo $books['Status'] == 'Borrowed' || $books['Status'] == 'Reserved' ? 'disabled' : ''?>>
                                             <i class="fas fa-edit"></i>
                                         </button>
                                     </form>
@@ -192,7 +211,7 @@ $dataBook = $showBook->showBook();
                                         <input type="hidden" value="<?php echo $books['ISBN'] ?>" name="isbn">
                                         <input type="hidden" value="<?php echo $books['Category'] ?>" name="category">
                                         <input type="hidden" value="<?php echo $books['CopyRight'] ?>" name="copyright">
-                                        <button type="submit" name="edit">
+                                        <button type="submit" name="editBookVerify" <?php echo $books['Status'] == 'Borrowed' || $books['Status'] == 'Reserved' ? 'disabled' : ''?>>
                                             <i class="fas fa-edit"></i>
                                         </button>
                                     </form>
@@ -212,16 +231,12 @@ $dataBook = $showBook->showBook();
     <!-- ADD BOOKS -->
     <?php if(isset($addBookVerify) && $addBookVerify == true): ?>
         <div class="overlay"></div>
-        <div class="add-book-container">
-            <form action="admin.php?page=book" method="POST" class="add-book-function">
-                <div class="close-container">
-                    <h2>Add Book</h2>
+        <form action="admin.php?page=book" method="POST" class="add-container">
+            <h2>
+                <i class="fas fa-book"></i> Add Book
+            </h2>
 
-                    <button type="submit" name="close">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-
+            <div class="grid-container">
                 <!-- BOOK TITLE -->
                 <div class="input-container">
                     <label for="bookTitle">Book Title</label>
@@ -257,94 +272,102 @@ $dataBook = $showBook->showBook();
                     <label for="bookQuantity">Book Quantity</label>
                     <input type="text" id="bookQuantity" name="bookQuantity" value="<?php  ?>">
                 </div>
+            </div>
 
-                <!-- MESSAGE DIALOG -->
-                <?php if (isset($addBookPrompt)): ?>
-                    <div class="alert-form">
-                        <?php if ($addBookPrompt == 'Successfully Inserted'): ?>
-                            <p style="color: green"><?php echo $addBookPrompt; ?></p>
-                        <?php else: ?>
-                            <p><?php echo $addBookPrompt; ?></p>
-                        <?php endif; ?>
-                    </div>
-                <?php else: ?>
-                    <p></p>
-                <?php endif; ?>
-
-                <button type="submit" name="addBook" class="save">
-                    <i class="fas fa-save"></i> Create
+            <!-- MESSAGE DIALOG -->
+            <?php if (isset($addBookPrompt)): ?>
+                <div class="alert-form">
+                    <?php if ($addBookPrompt == 'Successfully Inserted'): ?>
+                        <p style="color: green"><?php echo $addBookPrompt; ?></p>
+                    <?php else: ?>
+                        <p><?php echo $addBookPrompt; ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <p></p>
+            <?php endif; ?>
+            
+            <div class="button-container">
+                <button type="submit" name="closeAdd" class="back">
+                    <i class="fas fa-arrow-left"></i> BACK
                 </button>
-            </form>
-        </div>            
+                <button type="submit" name="addBook" class="save">
+                    <i class="fas fa-save"></i> CREATE
+                </button>
+            </div>
+        </form>
     <?php endif; ?>
-
 
     <!-- EDIT BOOKS -->
     <?php if(isset($editBookVerify) && $editBookVerify == true): ?>
         <div class="overlay"></div>
-        <div class="add-book-container">
-            <form action="admin.php?page=book" method="POST" class="add-book-function">
-                <div class="close-container">
-                    <h2>Edit Candidate</h2>
+        <form action="admin.php?page=book" method="POST" class="edit-container">
+            <h2>
+                <i class="fas fa-book"></i>
+                Edit Book
+            </h2>
 
-                    <button type="submit" name="close">
-                        <i class="fa fa-times"></i>
-                    </button>
-                </div>
-
+            <div class="grid-container">
                 <!-- BOOK ID -->
                 <div class="input-container">
                     <label for="bookID">Book ID</label>
-                    <input type="text" id="bookID" name="bookID" value="<?php  ?>">
+                    <input type="text" id="bookID" name="bookID" value="<?php echo isset($editBookID) ? $editBookID : '' ?>" readonly>
                 </div>
 
                 <!-- BOOK TITLE -->
                 <div class="input-container">
                     <label for="bookTitle">Book Title</label>
-                    <input type="text" id="bookTitle" name="bookTitle" value="<?php  ?>">
+                    <input type="text" id="bookTitle" name="bookTitle" value="<?php echo isset($editTitle) ? $editTitle : '' ?>">
                 </div>
 
                 <!-- BOOK AUTHOR -->
                 <div class="input-container">
                     <label for="bookAuthor">Book Author</label>
-                    <input type="text" id="bookAuthor" name="bookAuthor" value="<?php  ?>">
+                    <input type="text" id="bookAuthor" name="bookAuthor" value="<?php echo isset($editAuthor) ? $editAuthor : '' ?>">
                 </div>
 
                 <!-- BOOK ISBN -->
                 <div class="input-container">
                     <label for="bookISBN">Book ISBN</label>
-                    <input type="text" id="bookISBN" name="bookISBN" value="<?php  ?>">
+                    <input type="text" id="bookISBN" name="bookISBN" value="<?php echo isset($editISBN) ? $editISBN : '' ?>">
                 </div>
 
                 <!-- BOOK CATEGORY -->
                 <div class="input-container">
                     <label for="bookCategory">Book Category</label>
-                    <input type="text" id="bookCategory" name="bookCategory" value="<?php  ?>">
+                    <input type="text" id="bookCategory" name="bookCategory" value="<?php echo isset($editCategory) ? $editCategory : '' ?>">
                 </div>
 
                 <!-- BOOK QUANTITY -->
                 <div class="input-container">
-                    <label for="bookQuantity">Book Quantity</label>
-                    <input type="text" id="bookQuantity" name="bookQuantity" value="<?php  ?>">
+                    <label for="bookQuantity">Book Copyright</label>
+                    <input type="text" id="bookQuantity" name="bookCopyright" value="<?php echo isset($editCopyright) ? $editCopyright : '' ?>">
                 </div>
+            </div>
 
-                <!-- MESSAGE DIALOG -->
-                <?php if (isset($addBookPrompt)): ?>
-                    <div class="alert-form">
-                        <?php if ($addBookPrompt == 'Successfully Inserted'): ?>
-                            <p style="color: green"><?php echo $addBookPrompt; ?></p>
-                        <?php else: ?>
-                            <p><?php echo $addBookPrompt; ?></p>
-                        <?php endif; ?>
-                    </div>
-                <?php else: ?>
-                    <p></p>
-                <?php endif; ?>
+            <!-- MESSAGE DIALOG -->
+            <?php if (isset($editBookPrompt)): ?>
+                <div class="alert-form">
+                    <?php if ($editBookPrompt == 'Successfully Updated'): ?>
+                        <p style="color: green"><?php echo $editBookPrompt; ?></p>
+                    <?php elseif ($editBookPrompt == 'No changes made.'): ?>
+                    <p style="color: #222831"><?php echo $editBookPrompt; ?></p>
+                    <?php else: ?>
+                        <p><?php echo $editBookPrompt; ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <p></p>
+            <?php endif; ?>
 
-                <button type="submit" name="addBook" class="save">
-                    <i class="fas fa-save"></i> Create
+            <div class="button-container">
+                <button type="submit" name="closeEdit" class="back">
+                    <i class="fas fa-arrow-left"></i> BACK
                 </button>
-            </form>
-        </div>            
+                <button type="submit" name="updateBook" class="save">
+                    <i class="fas fa-sync-alt"></i> UPDATE
+                </button>
+            </div>
+        </form>
     <?php endif; ?>
 </div>

@@ -77,6 +77,8 @@ if (isset($_POST['search']) && $searchTerm !== null) {
             </button>
         </form>
 
+        <hr class="seperator-line-table">
+
         <table>
             <thead>
                 <tr>

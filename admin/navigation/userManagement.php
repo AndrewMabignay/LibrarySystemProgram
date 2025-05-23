@@ -8,81 +8,43 @@ if (isset($_POST['addUserVerify'])) {
 }
 
 
-if (isset($_POST['addStudent'])) {
-    $studentNo = $_POST['studentNo'];
-    $studentName = $_POST['studentName'];
-    $studentCourse = $_POST['studentCourse'];
-    $studentMajor = $_POST['studentMajor'];
-    $studentYearLevel = $_POST['studentYearLevel'];
-    $studentStatus = $_POST['studentStatus'];
-    $studentPassword = $_POST['password'];
-    $studentPasswordVerify = $_POST['verifyPassword'];
+if (isset($_POST['addUser'])) {
+    $userUsername = $_POST['userUsername'];
+    $userPassword = $_POST['userPassword'];
+    $userStatus = $_POST['userStatus'];
 
+    $addUser = new Model();
+    $addUserPrompting = $addUser->addUserManagement($userUsername, $userPassword, '', $userStatus);
+    
     $addVerify = true;
-
-    $addStudent = new Model();
-    $addStudent->setDatabaseTable('student');
-    $addStudentPrompting = $addStudent->addStudent($studentNo, $studentName, $studentCourse, $studentMajor, $studentYearLevel, $studentStatus, $studentPassword, $studentPasswordVerify);
-    // echo $addStudentPrompting;
 }
 
 if (isset($_POST['closeAdd'])) {
     unset($addVerify);
 }
 
-// ------------ SEARCH STUDENT ------------  
-if (isset($_POST['searchStudent'])) {
-    $searchStudentID = $_POST['searchStudentNumber'];
 
-    $searchStudentOutput = new Model();
-    $resultStudentOutput = $searchStudentOutput->searchStudentID($searchStudentID);
-}
 
 
 // ------------ EDIT STUDENT ------------
 if (isset($_POST['editUserVerify'])) {
-    $userIDEdit = $_POST['usernameEdit'];
-    $userUsernameEdit = $_POST['passwordEdit'];
-    $userPasswordEdit = $_POST['studentCourseEdit'];
-    $userRoleEdit = $_POST['roleEdit'];
+    $userIDEdit = $_POST['idEdit'];
+    $userUsernameEdit = $_POST['usernameEdit'];
     $userStatusEdit = $_POST['statusEdit'];
 
     $editUserVerify = true;
 }
 
 if (isset($_POST['updateStudent'])) {
-    $currentStudentNo = $_POST['currentStudentNo'];
+    $userIDEdit = $_POST['userID'];
+    $userUsernameEdit = $_POST['userUsername'];
+    $userPasswordEdit = $_POST['userPassword'];
+    $userStatusEdit = $_POST['userStatus'];
 
-    $updateStudentNo = $_POST['studentNo'];
-    $updateStudentName = $_POST['studentName'];
-    $updateStudentCourse = $_POST['studentCourse'];
-    $updateStudentMajor = $_POST['studentMajor'];
-    $updateStudentYearLevel = $_POST['studentYearLevel'];
-    $updateStudentStatus = $_POST['studentStatus'];
-    $updateStudentPassword = $_POST['password'];
-    $updateStudentPasswordVerify = $_POST['verifyPassword'];
+    $updateUser = new Model();
+    $updatePrompt = $updateUser->editUserManagement($userIDEdit, $userUsernameEdit, $userPasswordEdit, $userStatusEdit);
 
-    $editVerify = true;
-
-    $updateStudent = new Model();
-    $updatePrompt = $updateStudent->editStudent($currentStudentNo, $updateStudentNo, $updateStudentName, $updateStudentCourse, $updateStudentMajor, $updateStudentYearLevel, $updateStudentStatus, $updateStudentPassword, $updateStudentPasswordVerify);
-    // echo $updatePrompt;
-
-    $currentStudentUpdate = new Model();
-    $dataStudent = $currentStudentUpdate->studentID($currentStudentNo);
-    foreach ($dataStudent as $data) {
-        $studentIDEdit = $data['StudentID'];
-        $studentNameEdit = $data['StudentName'];
-        $studentCourseEdit = $data['Course'];
-        $studentMajorEdit = $data['Major'];
-        $studentYearLevelEdit = $data['YearLevel'];
-        $studentStatusEdit = $data['Status'];
-    }
-
-    if ($updatePrompt == 'Successfully Password Updated') {
-        $updateStudentPassword = '';
-        $updateStudentPasswordVerify = '';
-    }
+    $editUserVerify = true;
 }
 
 // ------------ REFRESH TABLE ------------
@@ -94,18 +56,25 @@ if (isset($_POST['refresh'])) {
 $showUserManagement = new Model();
 $dataUsers = $showUserManagement->showUserManagement();
 
+// ------------ SEARCH STUDENT ------------  
+if (isset($_POST['searchUser'])) {
+    $searchUserInput = $_POST['searchUserInput'];
+
+    $dataUsers = $showUserManagement->searchUserManagement($searchUserInput);
+}
+
 ?>
 
 <div class="student-container">
-    <form action="admin.php?page=studentList" method="POST" class="student-container-form">
+    <form action="admin.php?page=userManagement" method="POST" class="student-container-form">
         <h2>User Management</h2>    
 
         <div class="input-container">
             
             <!-- SEARCH INPUT -->
             <div class="search-container">
-                <input type="text" name="searchStudentNumber">
-                <button type="submit" name="searchStudent">
+                <input type="text" name="searchUserInput">
+                <button type="submit" name="searchUser">
                     <label for="">
                         <i class="fas fa-search"></i>
                     </label>
@@ -170,8 +139,9 @@ $dataUsers = $showUserManagement->showUserManagement();
                             <td><?php echo $users['Status'] ?></td>
                             <td>
                                 <form action="admin.php?page=userManagement" method="POST">
+                                    <input type="hidden" name="idEdit" value="<?php echo $users['ID'] ?>">
                                     <input type="hidden" name="usernameEdit" value="<?php echo $users['Username'] ?>">
-                                    <input type="hidden" name="passwordEdit" value="<?php echo $users['Role'] ?>">
+                                    <!--  -->
                                     <input type="hidden" name="roleEdit" value="<?php echo $users['Role'] ?>">
                                     <input type="hidden" name="statusEdit" value="<?php echo $users['Status'] ?>">
                                 
@@ -191,24 +161,41 @@ $dataUsers = $showUserManagement->showUserManagement();
     <?php if(isset($addUserVerify) && $addUserVerify == true): ?>
         <div class="overlay"></div>
         <!-- ADD STUDENT FORM -->
-        <form action="admin.php?page=studentList" method="POST" class="add-container">
+        <form action="admin.php?page=userManagement" method="POST" class="add-container">
             <h2>
-                <i class="fas fa-user-graduate"></i>
+                <i class="fas fa-user"></i>
                 Add User
             </h2>
 
             <div class="grid-container">
+                <!-- USERNAME -->
+                <div class="input-container">
+                    <label for="userUsername">Username</label>
+                    <input type="text" id="userUsername" name="userUsername" value="<?php  ?>">
+                </div>
                 
+                <!-- PASSWORD -->
+                <div class="input-container">
+                    <label for="userPassword">Password</label>
+                    <input type="text" id="userPassword" name="userPassword" value="<?php  ?>">
+                </div>
 
-                
+                <!-- STATUS -->
+                <div class="input-container">
+                    <label for="userStatus">Status</label>
+                    <select name="userStatus" id="userStatus">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>                
             </div>
 
-            <?php if (isset($addStudentPrompting)): ?>
+            <?php if (isset($addUserPrompting)): ?>
                 <div class="alert-form">
-                    <?php if ($addStudentPrompting == 'Successfully Inserted'): ?>
-                        <p style="color: green"><?php echo $addStudentPrompting; ?></p>
+                    <?php if ($addUserPrompting == 'Successfully Inserted'): ?>
+                        <p style="color: green"><?php echo $addUserPrompting; ?></p>
                     <?php else: ?>
-                        <p><?php echo $addStudentPrompting; ?></p>
+                        <p><?php echo $addUserPrompting; ?></p>
                     <?php endif; ?>
                 </div>
             <?php else: ?>
@@ -220,7 +207,7 @@ $dataUsers = $showUserManagement->showUserManagement();
                     <i class="fas fa-arrow-left"></i> 
                     BACK
                 </button>
-                <button type="submit" name="addStudent" class="save">
+                <button type="submit" name="addUser" class="save">
                     <i class="fas fa-plus"></i>
                     CREATE
                 </button>
@@ -232,62 +219,69 @@ $dataUsers = $showUserManagement->showUserManagement();
     <?php if(isset($editUserVerify) && $editUserVerify == true): ?>
         <div class="overlay"></div>
         <!-- EDIT STUDENT FORM -->
-        <form action="admin.php?page=studentList" method="POST" class="edit-container">
+        <form action="admin.php?page=userManagement" method="POST" class="edit-container">
             <input type="hidden" name="currentStudentNo" value="<?php echo isset($studentIDEdit) ? $studentIDEdit : '' ?>">    
 
-            <!-- STUDENT NUMBER CONTAINER -->
-            <div class="input-container">
-                <label for="studentNo">Student #</label>
-                <input type="text" id="studentNo" name="studentNo" value="<?php echo isset($studentIDEdit) ? $studentIDEdit : '' ?>">
+            <h2>
+                <i class="fas fa-user"></i>
+                Edit User
+            </h2>
+
+            <input type="hidden" name="currentStudentNo" value="<?php echo isset($studentIDEdit) ? $studentIDEdit : '' ?>">    
+
+            <div class="grid-container">
+                <!-- ID -->
+                <div class="input-container">
+                    <label for="userID">ID</label>
+                    <input type="text" id="userID" name="userID" value="<?php echo isset($userIDEdit) ? $userIDEdit : '' ?>" readonly>
+                </div>
+
+                <!-- USERNAME -->
+                <div class="input-container">
+                    <label for="userUsername">Username</label>
+                    <input type="text" id="userUsername" name="userUsername" value="<?php echo isset($userUsernameEdit) ? $userUsernameEdit : '' ?>">
+                </div>
+                
+                <!-- PASSWORD -->
+                <div class="input-container">
+                    <label for="userPassword">Password</label>
+                    <input type="text" id="userPassword" name="userPassword" value="<?php  ?>">
+                </div>
+
+                <!-- STATUS -->
+                <div class="input-container">
+                    <label for="userStatus">Status</label>
+                    <select name="userStatus" id="userStatus">
+                        <option value="Active" <?php echo isset($userStatus) && $userStatus == 'Active' ? 'selected' : '' ?>>Active</option>
+                        <option value="Inactive" <?php echo isset($userStatus) && $userStatus == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
+                    </select>
+                </div>                
             </div>
 
-            <!-- STUDENT NAME CONTAINER -->
-            <div class="input-container">
-                <label for="studentName">Student Name</label>
-                <input type="text" id="studentNo" name="studentName" value="<?php echo isset($studentNameEdit) ? $studentNameEdit : '' ?>">
+            <?php if (isset($updatePrompt)): ?>
+                <div class="alert-form">
+                    <?php if ($updatePrompt == 'Successfully Password Updated' || $updatePrompt == 'Successfully Updated'): ?>
+                        <p style="color: green"><?php echo $updatePrompt; ?></p>
+                    <?php elseif ($updatePrompt == 'No changes made.' || $updatePrompt == 'No password changes made.'): ?>
+                        <p style="color: #222831"><?php echo $updatePrompt; ?></p>
+                    <?php else: ?>
+                        <p><?php echo $updatePrompt; ?></p>
+                    <?php endif; ?>
+                </div>
+            <?php else: ?>
+                <p></p>
+            <?php endif; ?>
+
+            <div class="button-container">
+                <button type="submit" name="closeEdit" class="back">
+                    <i class="fas fa-arrow-left"></i> 
+                    BACK
+                </button>
+                <button type="submit" name="updateStudent" class="save">
+                    <i class="fas fa-sync-alt"></i>
+                    UPDATE
+                </button>
             </div>
-
-            <!-- COURSE CONTAINER -->
-            <div class="input-container">
-                <label for="studentCourse">Course</label>
-                <input type="text" id="studentCourse" name="studentCourse" value="<?php echo isset($studentCourseEdit) ? $studentCourseEdit : '' ?>">
-            </div>
-
-            <!-- MAJOR CONTAINER -->
-            <div class="input-container">
-                <label for="studentMajor">Major</label>
-                <input type="text" id="studentMajor" name="studentMajor" value="<?php echo isset($studentMajorEdit) ? $studentMajorEdit : '' ?>">
-            </div>
-
-            <!-- YEAR LEVEL CONTAINER -->
-            <div class="input-container">
-                <label for="studentYearLevel">Year Level</label>
-                <input type="text" id="studentYearLevel" name="studentYearLevel" value="<?php echo isset($studentYearLevelEdit) ? $studentYearLevelEdit : '' ?>">
-            </div>
-
-            <!-- STATUS CONTAINER -->
-            <div class="input-container">
-                <label for="studentStatus">Status</label>
-                <select name="studentStatus" id="studentStatus">
-                    <option value="Active" <?php echo isset($studentStatusEdit) && $studentStatusEdit == 'Active' ? 'selected' : '' ?>>Active</option>
-                    <option value="Inactive" <?php echo isset($studentStatusEdit) && $studentStatusEdit == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
-                </select>
-            </div>
-
-
-            <!-- PASSWORD CONTAINER -->
-            <div class="input-container">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" value="<?php echo isset($updateStudentPassword) ? $updateStudentPassword : '' ?>">
-            </div>
-
-            <!-- VERIFY PASSWORD CONTAINER -->
-            <div class="input-container">
-                <label for="verifyPassword">Verify Password</label>
-                <input type="password" id="verifyPassword" name="verifyPassword" value="<?php echo isset($updateStudentPasswordVerify) ? $updateStudentPasswordVerify : '' ?>">
-            </div>
-
-            <button type="submit" name="updateStudent">UPDATE</button>
         </form>
     <?php endif; ?>
     </div>

@@ -178,6 +178,45 @@ class Model {
             return 'Duplicate Student # Invalid.';
         }
 
+        $this->query = "SELECT ID FROM user WHERE Username = ?";
+    $statement = $conn->prepare($this->query);
+    $statement->bind_param('s', $currentStudentNumber);
+    $statement->execute();
+    $userResult = $statement->get_result();
+
+    if ($userResult->num_rows === 0) {
+        return 'User not found.';
+    }
+
+    $userRow = $userResult->fetch_assoc();
+    $userId = $userRow['ID'];
+
+    // If setting to Inactive, check borrowings and add_to_list
+    if ($status === 'Inactive') {
+        // Check for active borrowings
+        $this->query = "SELECT * FROM borrowings WHERE UserID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $userId);
+        $statement->execute();
+        $borrowings = $statement->get_result();
+
+        if ($borrowings->num_rows > 0) {
+            return 'Cannot inactivate student. They still have borrowed books.';
+        }
+
+        // Check for books in add_to_list
+        $this->query = "SELECT * FROM add_to_list WHERE UserID = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('i', $userId);
+        $statement->execute();
+        $addList = $statement->get_result();
+
+        if ($addList->num_rows > 0) {
+            return 'Cannot inactivate student. They still have books in their borrowing list.';
+        }
+    }
+
+
         // UPDATE STUDENT
         $this->query = "UPDATE students SET StudentName = ?, Course = ?, Major = ?, YearLevel = ?, Status = ? WHERE StudentID = ?";
         $statement = $conn->prepare($this->query);
@@ -752,7 +791,7 @@ class Model {
     public function showUserManagement() {
         global $conn;
 
-        $this->query = "SELECT * FROM user WHERE Role != 'Student'";
+        $this->query = "SELECT * FROM user WHERE Role != 'Student' AND Username <> 'admin'";
         $statement = $conn->prepare($this->query);
         $statement->execute();
         $result = $statement->get_result();
@@ -767,4 +806,90 @@ class Model {
 
         return $rows;       
     }
+
+    public function searchUserManagement($input) {
+        global $conn;
+
+        $this->query = "SELECT * FROM user WHERE Username = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $input);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $rows = [];
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $rows[] = $row;
+            }
+        }
+
+        return $rows;
+    }
+
+    public function addUserManagement($username, $password, $role, $status) {
+        global $conn;
+
+        // CHECK CONDITION
+        $this->query = "SELECT * FROM user WHERE Username = ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('s', $username);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        if ($result->num_rows > 0) {
+            return 'Username already exists';
+        }
+
+        // ADD USER
+        $role = 'Admin';
+
+        $this->query = "INSERT INTO user(Username, Password, Role, Status) VALUES (?, ?, ?, ?)";
+        $statement = $conn->prepare($this->query);
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $statement->bind_param('ssss', $username, $hashedPassword, $role, $status);
+        return $statement->execute() ? 'Successfully Inserted' : 'Not successfully Inserted';
+    }
+
+    public function editUserManagement($id, $username, $password, $status) {
+        global $conn;
+
+        // CHECK CONDITION
+        $this->query = "SELECT * FROM user WHERE Username = ? AND ID != ?";
+        $statement = $conn->prepare($this->query);
+        $statement->bind_param('si', $username, $id);
+        $statement->execute();
+        $result = $statement->get_result();
+
+        if ($result->num_rows > 0) {
+            return 'Username already exists';
+        }
+
+        // UPDATE USER
+        
+
+        if (empty($password)) {
+            $this->query = "UPDATE user SET Username = ?, Status = ? WHERE ID = ?";
+            $statement = $conn->prepare($this->query);
+            $statement->bind_param('ssi', $username, $status, $id);
+        } else {
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            $this->query = "UPDATE user SET Username = ?, Status = ?, Password = ? WHERE ID = ?";
+            $statement = $conn->prepare($this->query);
+            $statement->bind_param('sssi', $username, $status, $hashedPassword, $id);
+        }
+
+        $success = $statement->execute();
+        if ($success && $statement->affected_rows > 0) {
+            return 'Successfully Updated';
+        } elseif ($success && $statement->affected_rows === 0) {
+            return 'No changes made.';
+        } else {
+            return 'Not successfully Updated';
+        }
+    }
+
 }

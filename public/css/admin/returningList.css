@@ -206,5 +206,36 @@
     
 }
 
+.penalty-container {
+    font-family: var(--font-family-one);
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fff3f3;
+    border: 2px solid #ff4d4f;
+    border-left: 6px solid #ff4d4f;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.penalty-container h3 {
+    margin-top: 0;
+    color: #d9363e;
+    font-size: 20px;
+    border-bottom: 1px solid #ffb3b3;
+    padding-bottom: 8px;
+}
+
+.penalty-container ul {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.penalty-container li {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #5a1e1e;
+    line-height: 1.5;
+}
+
 
 /* ================================ 4. END BORROWING CONTAINER ================================ */

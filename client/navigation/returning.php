@@ -172,20 +172,20 @@ if (isset($_POST['returnBook'])) {
                 </table>
             </form>
         </div>
-    </div>
 
-    <?php if (!empty($booksWithPenalty)): ?>
-    <div class="penalty-container" style="margin-top: 20px; border: 1px solid red; padding: 10px;">
-        <h3 style="color: red;">Books with Penalty</h3>
-        <ul>
-            <?php foreach ($booksWithPenalty as $book): ?>
-                <li>
-                    <strong>Title:</strong> <?php echo $book['Title']; ?>, 
-                    <strong>Author:</strong> <?php echo $book['Author']; ?>, 
-                    <strong>Book ID:</strong> <?php echo $book['BookID']; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <?php if (!empty($booksWithPenalty)): ?>
+        <div class="penalty-container" style="">
+            <h3 style="color: red;">Books with Penalty</h3>
+            <ul>
+                <?php foreach ($booksWithPenalty as $book): ?>
+                    <li>
+                        <strong>Title:</strong> <?php echo $book['Title']; ?>, 
+                        <strong>Author:</strong> <?php echo $book['Author']; ?>, 
+                        <strong>Book ID:</strong> <?php echo $book['BookID']; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
     </div>
-<?php endif; ?>
 </div>

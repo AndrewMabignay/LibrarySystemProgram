@@ -16,13 +16,9 @@ if (isset($_POST['logout'])) {
     $logout->logout();
 }
 
-$page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
+$page = isset($_GET['page']) ? $_GET['page'] : 'borrowing';
 
-if (isset($_POST['dashboard']) || $page == 'dashboard') {
-    ob_start();
-    include('navigation/dashboard.php');
-    $content = ob_get_clean();
-} else if (isset($_POST['borrowing']) || $page == 'borrowing') {
+if (isset($_POST['borrowing']) || $page == 'borrowing') {
     ob_start();
     include('navigation/borrowing.php');
     $content = ob_get_clean();
@@ -45,6 +41,7 @@ if (isset($_POST['dashboard']) || $page == 'dashboard') {
     <link rel="stylesheet" href="../public/css/general.css">
     <link rel="stylesheet" href="../public/css/admin/admin.css">
     <link rel="stylesheet" href="../public/css/admin/borrowingList.css">
+    <link rel="stylesheet" href="../public/css/admin/returningList.css">
 
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -56,9 +53,6 @@ if (isset($_POST['dashboard']) || $page == 'dashboard') {
         <!-- BUTTON FORMS -->
         <div class="form-buttons-container">
             <form action="client.php?page=dashboard" method="GET">
-                <button type="submit" name="page" value="dashboard">
-                    <i class="fas fa-columns"></i> Dashboard
-                </button>
                 <button type="submit" name="page" value="borrowing">
                     <i class="fas fa-user"></i> Borrowing
                 </button>

@@ -83,7 +83,7 @@ if (isset($_POST['deleteAddtoListBook'])) {
 
     $borrowBook = new Model();
     $borrowBookPrompt = $borrowBook->deleteAddToList($userID, $bookID);    
-    echo $borrowBookPrompt;
+    // echo $borrowBookPrompt;
 
     $studentIDDisplay = $studentNumber;
     $studentIDUserDisplay = $studentIDDisplay;
@@ -156,6 +156,18 @@ if (isset($_POST['borrowBook'])) {
 $showBook = new Model();
 $dataBook = $showBook->showAvailableBorrowBook();
 
+if (isset($_POST['searchBookAvailable'])) {
+    $dataBook = $showBook->searchAvailableBook($_POST['searchBookAvailableName']);
+
+    $studentIDDisplay = $_POST['studentNumber'];
+    $studentIDUserDisplay = $_POST['studentNumber'];
+    $studentNameDisplay = $_POST['studentName'];
+    $courseDisplay = $_POST['course'];
+    $majorDisplay = $_POST['major'];
+    $yearLevelDisplay = $_POST['yearLevel'];
+
+}
+
 ?>
 
 <div class="borrowing-list-container">
@@ -165,9 +177,21 @@ $dataBook = $showBook->showAvailableBorrowBook();
         <div class="input-container">
             
             <!-- SEARCH INPUT -->
+            <!-- SEARCH INPUT -->
             <div class="search-container">
-                <input type="text" name="book" placeholder="Search Book Title">
-                <button type="submit" name="searchStudent">
+                <input type="text" name="searchBookAvailableName" placeholder="Search Book" <?php echo isset($studentIDDisplay) ? '' : 'disabled' ?>>
+                
+                <!-- hidden inputs to preserve student info -->
+                <input type="hidden" name="studentNumber" value="<?php echo isset($studentIDUserDisplay) ? $studentIDUserDisplay : '' ?>">
+                <input type="hidden" name="studentName" value="<?php echo isset($studentNameDisplay) ? $studentNameDisplay : '' ?>">
+                <input type="hidden" name="course" value="<?php echo isset($courseDisplay) ? $courseDisplay : '' ?>">
+                <input type="hidden" name="major" value="<?php echo isset($majorDisplay) ? $majorDisplay : '' ?>">
+                <input type="hidden" name="yearLevel" value="<?php echo isset($yearLevelDisplay) ? $yearLevelDisplay : '' ?>">
+                <input type="hidden" name="date" value="<?php echo date("Y-m-d") ?>">
+                <input type="hidden" name="time" value="<?php echo date("H:i:s") ?>">
+
+                
+                <button type="submit" name="searchBookAvailable" <?php echo isset($studentIDDisplay) ? '' : 'disabled' ?>>
                     <label for="">
                         <i class="fas fa-search"></i>
                     </label>
